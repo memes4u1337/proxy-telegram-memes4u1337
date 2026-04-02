@@ -107,7 +107,7 @@ systemctl start mtproto-bot
 
 ## 📋 Полный гайд
 
-Смотри файл [`GUIDE_memes4u1337.txt`](./GUIDE_memes4u1337.txt)
+Смотри файл [`GUIDE.txt`](./GUIDE.txt)
 
 ---
 

@@ -45,6 +45,8 @@ curl -fsSL https://get.docker.com | bash
 systemctl enable docker && systemctl start docker
 apt install -y ufw
 apt install -y git
+curl -fsSL https://get.docker.com | bash
+systemctl enable docker && systemctl start docker
 ```
 
 ### 3. Файрвол

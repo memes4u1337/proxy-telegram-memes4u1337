@@ -1,139 +1,93 @@
 <div align="center">
-
-# 🚀 PROXY TELEGRAM by @memes4u1337
-
-**Собственный MTProto прокси для Telegram + бот управления**
-
+🚀 PROXY TELEGRAM by @memes4u1337
+Собственный MTProto прокси для Telegram + бот управления
+Show Image
+Show Image
 </div>
 
----
-
-## ✨ Что это
-
+✨ Что это
 Полный комплект для запуска личного MTProto прокси:
 
-- 🔒 **Fake TLS** — трафик выглядит как обычный HTTPS
-- 🤖 **Telegram бот** — управление прямо с телефона
-- 🔔 **Watchdog** — алерт если прокси упал
-- ♻️ **Автозапуск** — поднимается сам после перезагрузки сервера
+🔒 Fake TLS — трафик выглядит как обычный HTTPS
+🤖 Telegram бот — управление прямо с телефона
+🔔 Watchdog — алерт если прокси упал
+♻️ Автозапуск — поднимается сам после перезагрузки сервера
 
----
 
-## 📦 Файлы
+📦 Файлы
+ФайлОписаниеbot.pyTelegram бот (управление + мониторинг)mtproto_setup.shУстановка проксиinstall_bot.shУстановка бота как системного сервисаrequirements.txtPython зависимостиenv.exampleШаблон конфига (переименуй в .env)
 
-| Файл | Описание |
-|------|----------|
-| `bot.py` | Telegram бот (управление + мониторинг) |
-| `mtproto_setup.sh` | Установка прокси |
-| `install_bot.sh` | Установка бота как системного сервиса |
-| `requirements.txt` | Python зависимости |
-| `.env.example` | Шаблон конфига |
+⚡ Быстрый старт
+1. Требования
 
----
+VPS с Ubuntu 22.04 вне страны блокировки (Hetzner, DigitalOcean, Vultr)
+512 MB RAM минимум
 
-## ⚡ Быстрый старт
-
-### 1. Требования
-- VPS с Ubuntu 22.04 (вне страны блокировки)
-- 512 MB RAM минимум
-
-### 2. Установка системы
-```bash
-apt update && apt upgrade -y
-apt install -y curl wget git ufw python3 python3-pip unzip
+2. Установка системы
+bashapt update && apt upgrade -y
+apt install -y curl wget git ufw python3 python3-pip unzip xxd
 curl -fsSL https://get.docker.com | bash
 systemctl enable docker && systemctl start docker
-apt install -y ufw
-apt install -y git
-curl -fsSL https://get.docker.com | bash
-systemctl enable docker && systemctl start docker
-apt install -y xxd
-```
-
-### 3. Файрвол
-```bash
-ufw allow ssh && ufw allow 443/tcp && ufw --force enable
-```
-
-### 4. Клонировать репозиторий
-```bash
-git clone https://github.com/memes4u1337/proxy-telegram-memes4u1337.git
+3. Файрвол
+bashufw allow ssh && ufw allow 443/tcp && ufw --force enable
+4. Клонировать репозиторий
+bashgit clone https://github.com/memes4u1337/proxy-telegram-memes4u1337.git
 cd proxy-telegram-memes4u1337
 chmod +x mtproto_setup.sh install_bot.sh
-```
-
-### 5. Запустить прокси
-```bash
-bash mtproto_setup.sh www.google.com
-```
-
-### 6. Настроить бота
-```bash
-cp .env.example .env
-nano .env  # вставь BOT_TOKEN и ADMIN_ID
-
-# ═══════════════════════════════════════════════
-#   PROXY TELEGRAM by @memes4u1337
-# ═══════════════════════════════════════════════
-
-# Токен бота от @BotFather
-BOT_TOKEN=ВАШ_БОТ
-
-# Твой Telegram ID (узнать у @userinfobot)
-ADMIN_ID=ID_ADMIN
-
-# Имя Docker контейнера (не менять если не знаешь зачем)
+5. Запустить прокси
+bashbash mtproto_setup.sh
+Или с конкретным доменом:
+bashbash mtproto_setup.sh ya.ru
+6. Установить зависимости Python
+bashpip3 install -r requirements.txt --break-system-packages
+7. Настроить бота
+Получи токен у @BotFather, свой ID у @userinfobot, затем:
+bashnano .env
+Вставь и заполни:
+envBOT_TOKEN=токен_от_BotFather
+ADMIN_ID=твой_id_из_userinfobot
 CONTAINER_NAME=mtproto-memes4u1337
-
-# Путь к конфиг файлу прокси
 CONFIG_FILE=/opt/mtproto_memes4u1337.conf
-
-# Путь к скрипту установки
 SETUP_SCRIPT=/opt/mtproto_setup.sh
-
-# Интервал проверки watchdog в секундах (300 = 5 минут)
 CHECK_INTERVAL=300
-```
-
-### 7. Запустить бота
-```bash
-bash install_bot.sh
+Сохрани: Ctrl+X → Y → Enter
+8. Запустить бота
+bashbash install_bot.sh
 systemctl start mtproto-bot
-```
+systemctl status mtproto-bot
+Бот пришлёт сообщение в Telegram что запустился ✅
 
----
+🎮 Команды бота
+КомандаОписание/startГлавное меню с кнопками/statusСтатус прокси + аптайм/linkСсылка для подключения/logsЛоги контейнера/restartПерезапуск прокси/regenНовый секрет (сбрасывает все подключения)
 
-## 🎮 Команды бота
+🎭 Лучшие Fake TLS домены
+ДоменНадёжностьya.ru⭐⭐⭐⭐⭐vk.com⭐⭐⭐⭐⭐mail.ru⭐⭐⭐⭐google.com⭐⭐⭐⭐
 
-| Команда | Описание |
-|---------|----------|
-| `/start` | Главное меню |
-| `/status` | Статус прокси + аптайм |
-| `/link` | Ссылка для подключения |
-| `/logs` | Логи контейнера |
-| `/restart` | Перезапуск прокси |
-| `/regen` | Новый секрет |
+🛠 Полезные команды
+bash# Посмотреть ссылку прокси
+cat /opt/mtproto_memes4u1337.conf
 
----
+# Логи прокси
+docker logs -f mtproto-memes4u1337
 
-## 🎭 Лучшие Fake TLS домены
+# Логи бота
+journalctl -u mtproto-bot -f
 
-| Домен | Надёжность |
-|-------|-----------|
-| `ya.ru` | ⭐⭐⭐⭐⭐ |
-| `max.ru` | ⭐⭐⭐⭐⭐ |
-| `vk.com` | ⭐⭐⭐⭐ |
+# Перезапустить прокси с новым секретом
+bash /opt/mtproto_setup.sh
 
----
+# Перезапустить бота
+systemctl restart mtproto-bot
 
-## 📋 Полный гайд
+⚠️ Важно
 
-Смотри файл [`GUIDE.txt`](./GUIDE.txt)
+Сервер обязательно должен быть вне страны где заблокирован Telegram
+Файл .env не загружай на GitHub — там твой токен бота!
 
----
+
+📋 Полный гайд
+Смотри файл GUIDE.txt
 
 <div align="center">
-
-**PROXY TELEGRAM by @memes4u1337** 🚀
-
+PROXY TELEGRAM by @memes4u1337 🚀
 </div>

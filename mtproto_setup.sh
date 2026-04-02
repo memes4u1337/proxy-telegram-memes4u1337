@@ -1,7 +1,7 @@
 #!/bin/bash
 # ═══════════════════════════════════════════════════════════
 #           PROXY TELEGRAM by @memes4u1337
-#           MTProto Proxy Setup Script
+#           MTProto Proxy Setup Script v2
 # ═══════════════════════════════════════════════════════════
 set -euo pipefail
 
@@ -38,21 +38,24 @@ echo ""
 [ "$EUID" -ne 0 ] && die "Запусти от root: sudo bash $0"
 
 # ── Проверка зависимостей ──
-for cmd in docker openssl curl xxd ss; do
+for cmd in docker openssl curl ss; do
     command -v "$cmd" &>/dev/null || die "Не найден: $cmd. Установи: apt install -y $cmd"
 done
 docker info &>/dev/null 2>&1 || die "Docker не запущен. Запусти: systemctl start docker"
 
 mkdir -p "$DATA_DIR" "$(dirname "$LOG_FILE")"
 
-# ── Генерация секрета (правильный Fake TLS формат) ──
+# ── Генерация секрета (ПРАВИЛЬНЫЙ формат) ──
+# Fake TLS формат: ee + 32 hex символа (ровно 16 байт random)
+# Домен передаётся отдельно через переменную окружения FAKE_DOMAIN_NAME
 log "Fake TLS домен: ${YELLOW}${FAKE_DOMAIN}${NC}"
 
-RANDOM_BYTES=$(openssl rand -hex 16)
-DOMAIN_HEX=$(echo -n "$FAKE_DOMAIN" | xxd -ps | tr -d '\n')
-SECRET="ee${RANDOM_BYTES}${DOMAIN_HEX}"
+# Генерируем ровно 16 случайных байт = 32 hex символа
+RANDOM_16=$(openssl rand -hex 16)
+# Итоговый секрет: ee + 32 символа = 34 символа total
+SECRET="ee${RANDOM_16}"
 
-ok "Секрет: ${YELLOW}${SECRET}${NC}"
+ok "Секрет: ${YELLOW}${SECRET}${NC} (длина: ${#SECRET})"
 
 # ── Выбор порта ──
 log "Ищем свободный порт..."
@@ -89,6 +92,7 @@ docker run -d \
     -p "${PORT}:443/udp" \
     -v "${DATA_DIR}:/data" \
     -e "SECRET=${SECRET}" \
+    -e "FAKE_TLS_DOMAIN=${FAKE_DOMAIN}" \
     telegrammessenger/proxy \
     > /dev/null
 
@@ -159,6 +163,7 @@ echo -e "  ${BOLD}Управление:${NC}"
 echo -e "  Логи:     ${CYAN}docker logs -f ${CONTAINER_NAME}${NC}"
 echo -e "  Рестарт:  ${CYAN}docker restart ${CONTAINER_NAME}${NC}"
 echo -e "  Конфиг:   ${CYAN}cat ${CONFIG_FILE}${NC}"
+echo -e "  Обновить: ${CYAN}bash /opt/mtproto_setup.sh${NC}"
 echo ""
 echo -e "${CYAN}  ══════════════════════════════════════════════${NC}"
 echo ""

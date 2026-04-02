@@ -45,6 +45,8 @@ apt update && apt upgrade -y
 apt install -y curl wget git ufw python3 python3-pip unzip xxd
 curl -fsSL https://get.docker.com | bash
 systemctl enable docker && systemctl start docker
+apt install ufw -y
+apt install -y git
 ```
 
 ### 3. Файрвол
@@ -65,6 +67,8 @@ chmod +x mtproto_setup.sh install_bot.sh
 
 ```bash
 bash mtproto_setup.sh
+apt install -y xxd
+curl -fsSL https://get.docker.com | bash
 ```
 
 Или с конкретным доменом:

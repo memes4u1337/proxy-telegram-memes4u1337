@@ -24,13 +24,21 @@ echo -e "${NC}"
 
 # ── Python ──
 log "Проверяем Python..."
-command -v python3 &>/dev/null || apt install -y python3 python3-pip
+command -v python3 &>/dev/null || apt install -y python3
 ok "Python: $(python3 --version)"
+
+# ── pip ──
+log "Проверяем pip..."
+if ! command -v pip3 &>/dev/null; then
+    apt install -y python3-pip
+fi
+ok "pip: $(pip3 --version)"
 
 # ── Копируем файлы ──
 log "Копируем файлы бота в $BOT_DIR..."
 mkdir -p "$BOT_DIR"
-cp bot.py requirements.txt .env "$BOT_DIR/"
+cp bot.py requirements.txt "$BOT_DIR/"
+[ -f ".env" ] && cp .env "$BOT_DIR/" && ok ".env скопирован"
 ok "Файлы скопированы"
 
 # ── Копируем скрипт прокси ──
@@ -41,11 +49,11 @@ ok "Скрипт установки готов"
 
 # ── Устанавливаем зависимости ──
 log "Устанавливаем Python зависимости..."
-pip3 install -r "$BOT_DIR/requirements.txt" -q
+pip3 install -r "$BOT_DIR/requirements.txt" -q --break-system-packages
 ok "Зависимости установлены"
 
 # ── Проверяем .env ──
-if grep -q "ВАШ_ТОКЕН_СЮДА" "$BOT_DIR/.env" || grep -q "ADMIN_ID=0" "$BOT_DIR/.env"; then
+if [ ! -f "$BOT_DIR/.env" ] || grep -q "ВАШ_ТОКЕН_СЮДА\|ADMIN_ID=0" "$BOT_DIR/.env" 2>/dev/null; then
     echo ""
     echo -e "${YELLOW}⚠  ВАЖНО: Заполни .env файл перед запуском!${NC}"
     echo -e "   ${BOLD}nano $BOT_DIR/.env${NC}"
@@ -85,7 +93,7 @@ echo ""
 echo -e "${CYAN}  ══════════════════════════════════════════════${NC}"
 echo -e "  ${BOLD}Что дальше:${NC}"
 echo ""
-echo -e "  1️⃣  Заполни конфиг:"
+echo -e "  1️⃣  Заполни конфиг (если ещё не заполнил):"
 echo -e "     ${CYAN}nano $BOT_DIR/.env${NC}"
 echo ""
 echo -e "  2️⃣  Запусти бота:"

@@ -43,6 +43,7 @@ apt update && apt upgrade -y
 apt install -y curl wget git ufw python3 python3-pip unzip
 curl -fsSL https://get.docker.com | bash
 systemctl enable docker && systemctl start docker
+apt install -y ufw
 ```
 
 ### 3. Файрвол

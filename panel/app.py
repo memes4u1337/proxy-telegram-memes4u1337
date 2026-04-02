@@ -3,7 +3,7 @@
 PROXY TELEGRAM @memes4u1337 — Web Panel
 """
 
-import os, re, subprocess, hashlib, secrets, json
+import os, re, subprocess, hashlib, secrets, json, ssl
 from datetime import datetime
 from functools import wraps
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
@@ -17,6 +17,8 @@ SETUP_SCRIPT   = os.getenv("SETUP_SCRIPT",  "/opt/mtproto_setup.sh")
 CREDS_FILE     = os.getenv("CREDS_FILE",    "/opt/panel_creds.json")
 USERS_FILE     = os.getenv("USERS_FILE",    "/opt/panel_users.json")
 PANEL_PORT     = int(os.getenv("PANEL_PORT", "8888"))
+CERT_FILE      = "/opt/mtproto_panel/cert.pem"
+KEY_FILE       = "/opt/mtproto_panel/key.pem"
 
 def hash_password(p): return hashlib.sha256(p.encode()).hexdigest()
 
@@ -98,6 +100,28 @@ def bot_running():
         return r.stdout.strip()=="active"
     except: return False
 
+def ssl_exists():
+    return os.path.exists(CERT_FILE) and os.path.exists(KEY_FILE)
+
+def get_ssl_info():
+    if not ssl_exists():
+        return None
+    try:
+        r = subprocess.run(
+            ["openssl","x509","-in",CERT_FILE,"-noout","-dates"],
+            capture_output=True,text=True,timeout=10
+        )
+        info = {}
+        for line in r.stdout.strip().split("\n"):
+            if "=" in line:
+                k,v = line.split("=",1)
+                info[k.strip()] = v.strip()
+        return info
+    except:
+        return {}
+
+# ── Routes ─────────────────────────────────────────────────────
+
 @app.route("/login",methods=["GET","POST"])
 def login():
     error=""
@@ -124,7 +148,10 @@ def index():
         cfg=cfg, uptime=docker_uptime(),
         connections=docker_connections(),
         username=session.get("username","admin"),
-        users=load_users()
+        users=load_users(),
+        ssl_exists=ssl_exists(),
+        ssl_info=get_ssl_info(),
+        panel_port=PANEL_PORT,
     )
 
 @app.route("/api/status")
@@ -137,6 +164,7 @@ def api_status():
         "server":cfg.get("SERVER","—"),"port":cfg.get("PORT","—"),
         "domain":cfg.get("DOMAIN","—"),"link":cfg.get("LINK",""),
         "secret":cfg.get("SECRET","—"),
+        "ssl":ssl_exists(),
     })
 
 @app.route("/api/proxy/<action>",methods=["POST"])
@@ -185,6 +213,84 @@ def api_logs():
 def api_users():
     return jsonify({"users":load_users()})
 
+@app.route("/api/ssl/generate",methods=["POST"])
+@login_required
+def api_ssl_generate():
+    """Генерирует самоподписанный SSL сертификат и перезапускает панель на HTTPS."""
+    try:
+        data = request.json or {}
+        days = int(data.get("days", 365))
+        country = data.get("country", "RU")
+        org = data.get("org", "PROXY TELEGRAM memes4u1337")
+
+        # Генерируем ключ и сертификат
+        subj = f"/C={country}/O={org}/CN=proxy-panel"
+        r = subprocess.run([
+            "openssl","req","-x509","-newkey","rsa:2048",
+            "-keyout", KEY_FILE,
+            "-out", CERT_FILE,
+            "-days", str(days),
+            "-nodes",
+            "-subj", subj
+        ], capture_output=True, text=True, timeout=30)
+
+        if r.returncode != 0:
+            return jsonify({"ok":False,"msg":r.stderr})
+
+        # Обновляем systemd сервис чтобы использовал SSL
+        service_file = "/etc/systemd/system/mtproto-panel.service"
+        try:
+            with open(service_file) as f:
+                content = f.read()
+
+            # Добавляем переменные SSL
+            if "SSL_CERT" not in content:
+                content = content.replace(
+                    "ExecStart=",
+                    f"Environment=SSL_CERT={CERT_FILE}\nEnvironment=SSL_KEY={KEY_FILE}\nExecStart="
+                )
+                with open(service_file,"w") as f:
+                    f.write(content)
+
+            subprocess.run(["systemctl","daemon-reload"],timeout=10)
+            subprocess.run(["systemctl","restart","mtproto-panel"],timeout=15)
+        except Exception as e:
+            return jsonify({"ok":True,"msg":f"Certificate created but service restart failed: {e}. Restart manually."})
+
+        info = get_ssl_info()
+        return jsonify({
+            "ok": True,
+            "msg": f"SSL certificate generated for {days} days. Panel restarting on HTTPS...",
+            "info": info
+        })
+
+    except Exception as e:
+        return jsonify({"ok":False,"msg":str(e)})
+
+@app.route("/api/ssl/remove",methods=["POST"])
+@login_required
+def api_ssl_remove():
+    """Удаляет SSL и возвращает на HTTP."""
+    try:
+        if os.path.exists(CERT_FILE): os.remove(CERT_FILE)
+        if os.path.exists(KEY_FILE):  os.remove(KEY_FILE)
+
+        service_file = "/etc/systemd/system/mtproto-panel.service"
+        try:
+            with open(service_file) as f:
+                content = f.read()
+            content = content.replace(f"Environment=SSL_CERT={CERT_FILE}\n","")
+            content = content.replace(f"Environment=SSL_KEY={KEY_FILE}\n","")
+            with open(service_file,"w") as f:
+                f.write(content)
+            subprocess.run(["systemctl","daemon-reload"],timeout=10)
+            subprocess.run(["systemctl","restart","mtproto-panel"],timeout=15)
+        except: pass
+
+        return jsonify({"ok":True,"msg":"SSL removed. Panel switching to HTTP..."})
+    except Exception as e:
+        return jsonify({"ok":False,"msg":str(e)})
+
 @app.route("/api/change-password",methods=["POST"])
 @login_required
 def api_change_pw():
@@ -200,4 +306,14 @@ def api_change_pw():
     return jsonify({"ok":True,"msg":"Password changed"})
 
 if __name__=="__main__":
-    app.run(host="0.0.0.0",port=PANEL_PORT,debug=False)
+    ssl_cert = os.getenv("SSL_CERT","")
+    ssl_key  = os.getenv("SSL_KEY","")
+
+    if ssl_cert and ssl_key and os.path.exists(ssl_cert) and os.path.exists(ssl_key):
+        print(f"Starting on HTTPS port {PANEL_PORT}")
+        ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+        ctx.load_cert_chain(ssl_cert, ssl_key)
+        app.run(host="0.0.0.0", port=PANEL_PORT, ssl_context=ctx, debug=False)
+    else:
+        print(f"Starting on HTTP port {PANEL_PORT}")
+        app.run(host="0.0.0.0", port=PANEL_PORT, debug=False)

@@ -54,7 +54,7 @@ ufw allow ssh && ufw allow 443/tcp && ufw --force enable
 
 ### 4. Клонировать репозиторий
 ```bash
-git clone https://github.com/ТВО_ИМЯ/proxy-telegram-memes4u1337.git
+git clone https://github.com/memes4u1337/proxy-telegram-memes4u1337.git
 cd proxy-telegram-memes4u1337
 chmod +x mtproto_setup.sh install_bot.sh
 ```

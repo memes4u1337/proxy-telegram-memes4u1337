@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!
 """
 ╔══════════════════════════════════════════════════════╗
 ║     Бот для PROXY TELEGRAM by @memes4u1337           ║
@@ -151,6 +151,7 @@ def back_kb() -> InlineKeyboardMarkup:
 
 @dp.message(CommandStart())
 async def cmd_start(msg: types.Message):
+    save_user(msg.from_user)
     cfg = read_config()
     link = cfg.get("LINK", "")
 
@@ -397,3 +398,28 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
+
+# ── Сохранение пользователей ──────────────────────────────────
+USERS_FILE = os.getenv("USERS_FILE", "/opt/panel_users.json")
+
+def save_user(user: types.User):
+    """Сохраняет пользователя в файл для панели."""
+    try:
+        try:
+            with open(USERS_FILE) as f:
+                users = json.load(f)
+        except:
+            users = []
+        ids = [u["id"] for u in users]
+        if user.id not in ids:
+            users.append({
+                "id": user.id,
+                "username": f"@{user.username}" if user.username else "",
+                "name": f"{user.first_name or ''} {user.last_name or ''}".strip(),
+                "date": datetime.now().strftime("%Y-%m-%d %H:%M")
+            })
+            with open(USERS_FILE, "w") as f:
+                json.dump(users, f, ensure_ascii=False)
+    except Exception as e:
+        log.error(f"save_user error: {e}")

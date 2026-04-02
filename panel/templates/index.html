@@ -5,762 +5,499 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PROXY TELEGRAM @memes4u1337 — Панель</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Syne:wght@700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0d0d14;
+  --sidebar:#0f0f1a;
+  --card:#13131e;
+  --card2:#16161f;
+  --border:#1f1f30;
+  --accent:#3b82f6;
+  --accent-glow:rgba(59,130,246,.15);
+  --green:#22c55e;
+  --green-bg:rgba(34,197,94,.1);
+  --red:#ef4444;
+  --red-bg:rgba(239,68,68,.1);
+  --yellow:#f59e0b;
+  --purple:#8b5cf6;
+  --text:#f1f5f9;
+  --text2:#94a3b8;
+  --muted:#64748b;
+  --font:'Inter',sans-serif;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px;min-height:100vh;display:flex}
 
-  * { margin:0; padding:0; box-sizing:border-box; }
+/* Sidebar */
+.sidebar{
+  width:220px;min-height:100vh;
+  background:var(--sidebar);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  position:fixed;top:0;left:0;bottom:0;
+  z-index:10;
+}
+.sidebar-top{padding:20px 16px;border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.logo-icon{
+  width:32px;height:32px;
+  background:linear-gradient(135deg,#3b82f6,#8b5cf6);
+  border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;flex-shrink:0;
+}
+.logo-text{font-size:13px;font-weight:700;letter-spacing:-.01em}
+.logo-sub{font-size:11px;color:var(--muted);margin-top:1px}
+.nav{padding:12px 8px;flex:1}
+.nav-section{font-size:10px;font-weight:600;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;padding:8px 8px 4px}
+.nav-item{
+  display:flex;align-items:center;gap:9px;
+  padding:8px 10px;border-radius:8px;
+  cursor:pointer;color:var(--text2);
+  font-size:13px;font-weight:500;
+  transition:all .15s;margin-bottom:2px;
+  text-decoration:none;border:none;background:none;width:100%;text-align:left;
+}
+.nav-item:hover{background:rgba(255,255,255,.04);color:var(--text)}
+.nav-item.active{background:var(--accent-glow);color:var(--accent)}
+.nav-item .icon{font-size:15px;width:20px;text-align:center;flex-shrink:0}
+.sidebar-bottom{padding:12px;border-top:1px solid var(--border)}
+.user-info{display:flex;align-items:center;gap:8px;padding:8px;border-radius:8px;margin-bottom:8px}
+.avatar{
+  width:28px;height:28px;border-radius:7px;
+  background:linear-gradient(135deg,#3b82f6,#8b5cf6);
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;color:#fff;flex-shrink:0;
+}
+.user-name{font-size:13px;font-weight:500}
+.logout{
+  display:block;width:100%;padding:8px;
+  background:transparent;border:1px solid var(--border);
+  color:var(--muted);border-radius:8px;font-family:var(--font);
+  font-size:12px;cursor:pointer;transition:all .15s;text-align:center;
+  text-decoration:none;
+}
+.logout:hover{border-color:var(--red);color:var(--red)}
 
-  :root {
-    --bg: #0a0a0f;
-    --surface: #111118;
-    --surface2: #16161f;
-    --border: #1e1e2e;
-    --accent: #00d4ff;
-    --accent2: #7c3aed;
-    --green: #22c55e;
-    --red: #ef4444;
-    --yellow: #f59e0b;
-    --text: #e2e8f0;
-    --muted: #64748b;
-    --mono: 'JetBrains Mono', monospace;
-    --display: 'Syne', sans-serif;
-  }
+/* Main */
+.main{margin-left:220px;flex:1;padding:28px;min-height:100vh}
+.page{display:none}
+.page.active{display:block}
+.page-header{margin-bottom:24px}
+.page-title{font-size:20px;font-weight:700;letter-spacing:-.02em;margin-bottom:4px}
+.page-sub{font-size:13px;color:var(--muted)}
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--mono);
-    min-height: 100vh;
-    font-size: 14px;
-  }
+/* Stats row */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:22px}
+.stat{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:14px;padding:18px;
+  position:relative;overflow:hidden;
+}
+.stat-label{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;margin-bottom:10px}
+.stat-value{font-size:26px;font-weight:700;letter-spacing:-.03em;margin-bottom:4px}
+.stat-hint{font-size:12px;color:var(--muted)}
+.stat-icon{position:absolute;right:16px;top:16px;font-size:22px;opacity:.3}
 
-  .bg-grid {
-    position: fixed; inset: 0; z-index: 0;
-    background-image:
-      linear-gradient(rgba(0,212,255,.02) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,212,255,.02) 1px, transparent 1px);
-    background-size: 40px 40px;
-    pointer-events: none;
-  }
+/* Status badge */
+.badge{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:3px 9px;border-radius:20px;font-size:12px;font-weight:600;
+}
+.badge.on{background:var(--green-bg);color:var(--green)}
+.badge.off{background:var(--red-bg);color:var(--red)}
+.dot{width:6px;height:6px;border-radius:50%}
+.dot.on{background:var(--green);box-shadow:0 0 4px var(--green);animation:pulse 2s infinite}
+.dot.off{background:var(--red)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 
-  /* ── Layout ── */
-  .layout { display: flex; min-height: 100vh; position: relative; z-index: 1; }
+/* Card */
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;margin-bottom:16px;overflow:hidden}
+.card-header{
+  padding:14px 18px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.card-title{font-size:13px;font-weight:600;letter-spacing:-.01em}
+.card-body{padding:18px}
 
-  /* ── Sidebar ── */
-  .sidebar {
-    width: 240px;
-    background: var(--surface);
-    border-right: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    padding: 24px 0;
-    position: fixed;
-    top: 0; left: 0; bottom: 0;
-  }
+/* Info table */
+.info-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:10px 0;border-bottom:1px solid var(--border);
+}
+.info-row:last-child{border:none}
+.info-key{font-size:12px;color:var(--muted);font-weight:500}
+.info-val{font-size:13px;font-weight:500;display:flex;align-items:center;gap:8px;max-width:60%;text-align:right;word-break:break-all}
 
-  .sidebar-logo {
-    padding: 0 20px 24px;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 16px;
-  }
+/* Link box */
+.link-box{
+  background:var(--card2);border:1px solid var(--border);
+  border-radius:10px;padding:12px 14px;
+  font-size:12px;color:var(--accent);
+  word-break:break-all;line-height:1.6;
+  cursor:pointer;transition:border-color .15s;
+  margin:12px 0 4px;
+}
+.link-box:hover{border-color:var(--accent)}
+.link-hint{font-size:11px;color:var(--muted);margin-bottom:16px}
 
-  .sidebar-logo h1 {
-    font-family: var(--display);
-    font-size: 13px;
-    font-weight: 800;
-    color: var(--accent);
-    letter-spacing: .05em;
-    text-transform: uppercase;
-  }
+/* Buttons */
+.btn-row{display:flex;gap:8px;flex-wrap:wrap}
+.btn{
+  padding:8px 16px;border-radius:8px;border:none;
+  font-family:var(--font);font-size:13px;font-weight:600;
+  cursor:pointer;transition:all .15s;
+  display:inline-flex;align-items:center;gap:6px;
+}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:#2563eb}
+.btn-success{background:var(--green-bg);color:var(--green);border:1px solid rgba(34,197,94,.2)}
+.btn-success:hover{background:rgba(34,197,94,.18)}
+.btn-danger{background:var(--red-bg);color:var(--red);border:1px solid rgba(239,68,68,.2)}
+.btn-danger:hover{background:rgba(239,68,68,.18)}
+.btn-ghost{background:rgba(255,255,255,.04);color:var(--text2);border:1px solid var(--border)}
+.btn-ghost:hover{background:rgba(255,255,255,.07);color:var(--text)}
+.btn-purple{background:rgba(139,92,246,.12);color:var(--purple);border:1px solid rgba(139,92,246,.2)}
+.btn-purple:hover{background:rgba(139,92,246,.2)}
+.copy-btn{
+  padding:2px 8px;border-radius:5px;border:1px solid var(--border);
+  background:transparent;color:var(--muted);font-size:11px;
+  font-family:var(--font);cursor:pointer;transition:all .15s;flex-shrink:0;
+}
+.copy-btn:hover{border-color:var(--accent);color:var(--accent)}
 
-  .sidebar-logo p {
-    font-size: 10px;
-    color: var(--muted);
-    margin-top: 2px;
-    letter-spacing: .1em;
-  }
+/* Input */
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12px;font-weight:500;color:var(--muted);margin-bottom:6px}
+.field input,.field select{
+  width:100%;background:var(--card2);border:1px solid var(--border);
+  border-radius:8px;padding:9px 12px;color:var(--text);
+  font-family:var(--font);font-size:13px;outline:none;transition:all .2s;
+}
+.field input:focus,.field select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
+.field select option{background:var(--card)}
+.input-row{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
+.input-row .field{flex:1;min-width:160px}
 
-  .nav-label {
-    font-size: 10px;
-    letter-spacing: .12em;
-    color: var(--muted);
-    text-transform: uppercase;
-    padding: 8px 20px 4px;
-  }
+/* Logs */
+.log-box{
+  background:var(--card2);border:1px solid var(--border);border-radius:10px;
+  padding:14px;font-size:11px;line-height:1.8;color:#94a3b8;
+  max-height:420px;overflow-y:auto;white-space:pre-wrap;word-break:break-all;
+  font-family:'JetBrains Mono','Courier New',monospace;
+}
+.log-box::-webkit-scrollbar{width:4px}
+.log-box::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
 
-  .nav-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 20px;
-    cursor: pointer;
-    color: var(--muted);
-    font-size: 13px;
-    transition: all .15s;
-    border-left: 2px solid transparent;
-    text-decoration: none;
-  }
-
-  .nav-item:hover { color: var(--text); background: rgba(255,255,255,.03); }
-  .nav-item.active { color: var(--accent); border-left-color: var(--accent); background: rgba(0,212,255,.05); }
-
-  .sidebar-footer {
-    margin-top: auto;
-    padding: 16px 20px;
-    border-top: 1px solid var(--border);
-  }
-
-  .user-badge {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 12px;
-    color: var(--muted);
-  }
-
-  .user-avatar {
-    width: 28px; height: 28px;
-    background: var(--accent2);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    color: #fff;
-    font-family: var(--display);
-    font-weight: 700;
-  }
-
-  .logout-btn {
-    margin-top: 10px;
-    width: 100%;
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--muted);
-    border-radius: 6px;
-    padding: 7px;
-    font-family: var(--mono);
-    font-size: 11px;
-    cursor: pointer;
-    letter-spacing: .05em;
-    transition: all .15s;
-    text-decoration: none;
-    display: block;
-    text-align: center;
-  }
-
-  .logout-btn:hover { border-color: var(--red); color: var(--red); }
-
-  /* ── Main ── */
-  .main {
-    margin-left: 240px;
-    flex: 1;
-    padding: 32px;
-  }
-
-  .page { display: none; }
-  .page.active { display: block; }
-
-  .page-title {
-    font-family: var(--display);
-    font-size: 22px;
-    font-weight: 800;
-    margin-bottom: 8px;
-    color: var(--text);
-  }
-
-  .page-sub {
-    font-size: 12px;
-    color: var(--muted);
-    margin-bottom: 28px;
-    letter-spacing: .05em;
-  }
-
-  /* ── Cards ── */
-  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
-
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 20px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-  }
-
-  .card.green::before { background: var(--green); }
-  .card.red::before   { background: var(--red); }
-  .card.blue::before  { background: var(--accent); }
-  .card.purple::before { background: var(--accent2); }
-
-  .card-label { font-size: 10px; letter-spacing: .12em; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; }
-  .card-value { font-family: var(--display); font-size: 28px; font-weight: 800; }
-  .card-sub   { font-size: 11px; color: var(--muted); margin-top: 4px; }
-
-  .status-dot {
-    display: inline-block;
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    margin-right: 6px;
-    animation: pulse 2s infinite;
-  }
-
-  .status-dot.on  { background: var(--green); box-shadow: 0 0 6px var(--green); }
-  .status-dot.off { background: var(--red); animation: none; }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50%       { opacity: .5; }
-  }
-
-  /* ── Section ── */
-  .section {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    margin-bottom: 20px;
-    overflow: hidden;
-  }
-
-  .section-header {
-    padding: 16px 20px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .section-title {
-    font-family: var(--display);
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: .05em;
-    text-transform: uppercase;
-  }
-
-  .section-body { padding: 20px; }
-
-  /* ── Info rows ── */
-  .info-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px solid var(--border);
-    font-size: 13px;
-  }
-
-  .info-row:last-child { border-bottom: none; }
-  .info-key { color: var(--muted); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
-  .info-val { font-weight: 500; display: flex; align-items: center; gap: 8px; }
-
-  .copy-btn {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--muted);
-    border-radius: 4px;
-    padding: 2px 8px;
-    font-family: var(--mono);
-    font-size: 10px;
-    cursor: pointer;
-    transition: all .15s;
-  }
-
-  .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
-
-  /* ── Buttons ── */
-  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
-
-  .btn {
-    padding: 10px 18px;
-    border-radius: 8px;
-    border: none;
-    font-family: var(--mono);
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: .05em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all .15s;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .btn:active { transform: scale(.97); }
-  .btn-primary { background: var(--accent); color: #000; }
-  .btn-primary:hover { opacity: .85; }
-  .btn-danger  { background: rgba(239,68,68,.15); color: var(--red); border: 1px solid rgba(239,68,68,.3); }
-  .btn-danger:hover  { background: rgba(239,68,68,.25); }
-  .btn-success { background: rgba(34,197,94,.15); color: var(--green); border: 1px solid rgba(34,197,94,.3); }
-  .btn-success:hover { background: rgba(34,197,94,.25); }
-  .btn-neutral { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
-  .btn-neutral:hover { border-color: var(--accent); }
-  .btn-purple  { background: rgba(124,58,237,.15); color: #a78bfa; border: 1px solid rgba(124,58,237,.3); }
-  .btn-purple:hover  { background: rgba(124,58,237,.25); }
-
-  .btn:disabled { opacity: .4; cursor: not-allowed; }
-
-  /* ── Link box ── */
-  .link-box {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 14px 16px;
-    font-size: 12px;
-    color: var(--accent);
-    word-break: break-all;
-    letter-spacing: .02em;
-    line-height: 1.6;
-    margin: 12px 0;
-    cursor: pointer;
-    transition: border-color .15s;
-  }
-
-  .link-box:hover { border-color: var(--accent); }
-
-  /* ── Input ── */
-  .input-group { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
-
-  .field { flex: 1; min-width: 180px; }
-  .field label { display: block; font-size: 10px; letter-spacing: .1em; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; }
-  .field input, .field select {
-    width: 100%;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 10px 14px;
-    color: var(--text);
-    font-family: var(--mono);
-    font-size: 13px;
-    outline: none;
-    transition: border-color .2s;
-  }
-
-  .field input:focus, .field select:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(0,212,255,.08);
-  }
-
-  .field select option { background: var(--surface); }
-
-  /* ── Logs ── */
-  .log-box {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 16px;
-    font-size: 11px;
-    line-height: 1.7;
-    color: #94a3b8;
-    max-height: 400px;
-    overflow-y: auto;
-    white-space: pre-wrap;
-    word-break: break-all;
-  }
-
-  .log-box::-webkit-scrollbar { width: 4px; }
-  .log-box::-webkit-scrollbar-track { background: transparent; }
-  .log-box::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-
-  /* ── Toast ── */
-  .toast {
-    position: fixed;
-    bottom: 24px; right: 24px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 14px 20px;
-    font-size: 13px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    z-index: 1000;
-    transform: translateY(100px);
-    opacity: 0;
-    transition: all .3s;
-    max-width: 320px;
-    box-shadow: 0 8px 32px rgba(0,0,0,.4);
-  }
-
-  .toast.show { transform: translateY(0); opacity: 1; }
-  .toast.ok   { border-color: var(--green); }
-  .toast.err  { border-color: var(--red); }
-
-  /* ── Loading spinner ── */
-  .spinner {
-    width: 14px; height: 14px;
-    border: 2px solid rgba(0,212,255,.2);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin .6s linear infinite;
-    display: none;
-  }
-
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* ── Modal ── */
-  .modal-overlay {
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,.7);
-    backdrop-filter: blur(4px);
-    z-index: 500;
-    display: none;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .modal-overlay.show { display: flex; }
-
-  .modal {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 32px;
-    width: 400px;
-    box-shadow: 0 32px 64px rgba(0,0,0,.5);
-    animation: fadeUp .3s ease;
-  }
-
-  @keyframes fadeUp {
-    from { opacity:0; transform:translateY(16px); }
-    to   { opacity:1; transform:translateY(0); }
-  }
-
-  .modal h2 { font-family: var(--display); font-size: 18px; font-weight: 800; margin-bottom: 20px; }
-
-  .modal .field { margin-bottom: 16px; }
-
-  .modal-footer { display: flex; gap: 10px; margin-top: 24px; }
+/* Toast */
+.toast{
+  position:fixed;bottom:20px;right:20px;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:12px;padding:12px 18px;
+  display:flex;align-items:center;gap:10px;
+  font-size:13px;font-weight:500;z-index:999;
+  transform:translateY(80px);opacity:0;
+  transition:all .3s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:0 8px 32px rgba(0,0,0,.4);max-width:300px;
+}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.ok{border-color:rgba(34,197,94,.3)}
+.toast.err{border-color:rgba(239,68,68,.3)}
 </style>
 </head>
 <body>
-<div class="bg-grid"></div>
 
-<div class="layout">
-  <!-- Sidebar -->
-  <aside class="sidebar">
-    <div class="sidebar-logo">
-      <h1>⚡ Proxy TG</h1>
-      <p>@memes4u1337 Panel</p>
-    </div>
-
-    <span class="nav-label">Навигация</span>
-    <a class="nav-item active" onclick="showPage('dashboard', this)">📊 Дашборд</a>
-    <a class="nav-item" onclick="showPage('proxy', this)">🔌 Прокси</a>
-    <a class="nav-item" onclick="showPage('bot', this)">🤖 Бот</a>
-    <a class="nav-item" onclick="showPage('logs', this)">📋 Логи</a>
-    <a class="nav-item" onclick="showPage('settings', this)">⚙️ Настройки</a>
-
-    <div class="sidebar-footer">
-      <div class="user-badge">
-        <div class="user-avatar">{{ username[0].upper() }}</div>
-        <span>{{ username }}</span>
+<aside class="sidebar">
+  <div class="sidebar-top">
+    <div class="logo">
+      <div class="logo-icon">⚡</div>
+      <div>
+        <div class="logo-text">Proxy TG</div>
+        <div class="logo-sub">@memes4u1337</div>
       </div>
-      <a href="/logout" class="logout-btn">Выйти</a>
     </div>
-  </aside>
+  </div>
 
-  <!-- Main -->
-  <main class="main">
+  <nav class="nav">
+    <div class="nav-section">Меню</div>
+    <button class="nav-item active" onclick="go('dashboard',this)">
+      <span class="icon">📊</span> Дашборд
+    </button>
+    <button class="nav-item" onclick="go('proxy',this)">
+      <span class="icon">🔌</span> Прокси
+    </button>
+    <button class="nav-item" onclick="go('bot',this)">
+      <span class="icon">🤖</span> Бот
+    </button>
+    <button class="nav-item" onclick="go('logs',this)">
+      <span class="icon">📋</span> Логи
+    </button>
+    <button class="nav-item" onclick="go('settings',this)">
+      <span class="icon">⚙️</span> Настройки
+    </button>
+  </nav>
 
-    <!-- Dashboard -->
-    <div class="page active" id="page-dashboard">
+  <div class="sidebar-bottom">
+    <div class="user-info">
+      <div class="avatar">{{ username[0].upper() }}</div>
+      <div class="user-name">{{ username }}</div>
+    </div>
+    <a href="/logout" class="logout">Выйти</a>
+  </div>
+</aside>
+
+<main class="main">
+
+  <!-- DASHBOARD -->
+  <div class="page active" id="page-dashboard">
+    <div class="page-header">
       <div class="page-title">Дашборд</div>
-      <div class="page-sub">PROXY TELEGRAM by @memes4u1337 · Общий статус системы</div>
-
-      <div class="cards">
-        <div class="card {% if running %}green{% else %}red{% endif %}">
-          <div class="card-label">Прокси</div>
-          <div class="card-value">
-            <span class="status-dot {% if running %}on{% else %}off{% endif %}"></span>
-            {% if running %}ON{% else %}OFF{% endif %}
-          </div>
-          <div class="card-sub">MTProto контейнер</div>
-        </div>
-
-        <div class="card {% if bot_running %}green{% else %}red{% endif %}">
-          <div class="card-label">Бот</div>
-          <div class="card-value">
-            <span class="status-dot {% if bot_running %}on{% else %}off{% endif %}"></span>
-            {% if bot_running %}ON{% else %}OFF{% endif %}
-          </div>
-          <div class="card-sub">Telegram бот</div>
-        </div>
-
-        <div class="card blue">
-          <div class="card-label">Подключений</div>
-          <div class="card-value" id="dash-connections">{{ connections }}</div>
-          <div class="card-sub">Активных соединений</div>
-        </div>
-
-        <div class="card purple">
-          <div class="card-label">Аптайм</div>
-          <div class="card-value" style="font-size:18px" id="dash-uptime">{{ uptime }}</div>
-          <div class="card-sub">Время работы прокси</div>
-        </div>
-      </div>
-
-      <div class="section">
-        <div class="section-header">
-          <span class="section-title">📡 Данные подключения</span>
-          <button class="btn btn-neutral" onclick="refreshStatus()">↻ Обновить</button>
-        </div>
-        <div class="section-body">
-          <div class="info-row">
-            <span class="info-key">Сервер</span>
-            <span class="info-val" id="info-server">{{ cfg.get('SERVER', '—') }}</span>
-          </div>
-          <div class="info-row">
-            <span class="info-key">Порт</span>
-            <span class="info-val" id="info-port">{{ cfg.get('PORT', '—') }}</span>
-          </div>
-          <div class="info-row">
-            <span class="info-key">Fake TLS домен</span>
-            <span class="info-val" id="info-domain">{{ cfg.get('DOMAIN', '—') }}</span>
-          </div>
-          <div class="info-row">
-            <span class="info-key">Секрет</span>
-            <span class="info-val">
-              <span id="info-secret">{{ cfg.get('SECRET', '—') }}</span>
-              <button class="copy-btn" onclick="copyText(document.getElementById('info-secret').textContent)">copy</button>
-            </span>
-          </div>
-          <div class="info-row">
-            <span class="info-key">Ссылка</span>
-            <span class="info-val" style="flex-direction:column;align-items:flex-start;gap:4px">
-              <span id="info-link" style="font-size:11px;color:var(--accent);word-break:break-all">{{ cfg.get('LINK', '—') }}</span>
-              <button class="copy-btn" onclick="copyText(document.getElementById('info-link').textContent)">copy link</button>
-            </span>
-          </div>
-        </div>
-      </div>
-
-      <div class="link-box" id="dash-link" onclick="copyText(this.textContent)">
-        {{ cfg.get('LINK', 'Ссылка не найдена — запусти mtproto_setup.sh') }}
-      </div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:24px">Нажми на ссылку чтобы скопировать</div>
+      <div class="page-sub">Общий статус PROXY TELEGRAM @memes4u1337</div>
     </div>
 
-    <!-- Proxy -->
-    <div class="page" id="page-proxy">
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-label">Прокси</div>
+        <div class="stat-value">
+          <span class="badge {% if running %}on{% else %}off{% endif %}">
+            <span class="dot {% if running %}on{% else %}off{% endif %}"></span>
+            {% if running %}Работает{% else %}Стоп{% endif %}
+          </span>
+        </div>
+        <div class="stat-hint">MTProto контейнер</div>
+        <div class="stat-icon">🔌</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Бот</div>
+        <div class="stat-value">
+          <span class="badge {% if bot_running %}on{% else %}off{% endif %}">
+            <span class="dot {% if bot_running %}on{% else %}off{% endif %}"></span>
+            {% if bot_running %}Работает{% else %}Стоп{% endif %}
+          </span>
+        </div>
+        <div class="stat-hint">Telegram бот</div>
+        <div class="stat-icon">🤖</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Подключений</div>
+        <div class="stat-value" id="d-conn">{{ connections }}</div>
+        <div class="stat-hint">Активных сейчас</div>
+        <div class="stat-icon">👥</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Аптайм</div>
+        <div class="stat-value" style="font-size:18px;padding-top:4px" id="d-uptime">{{ uptime }}</div>
+        <div class="stat-hint">Время работы</div>
+        <div class="stat-icon">⏱</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Данные подключения</span>
+        <button class="btn btn-ghost" style="padding:6px 12px;font-size:12px" onclick="refresh()">↻ Обновить</button>
+      </div>
+      <div class="card-body">
+        <div class="info-row">
+          <span class="info-key">Сервер</span>
+          <span class="info-val" id="i-server">{{ cfg.get('SERVER','—') }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">Порт</span>
+          <span class="info-val" id="i-port">{{ cfg.get('PORT','—') }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">Fake TLS</span>
+          <span class="info-val" id="i-domain">{{ cfg.get('DOMAIN','—') }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">Секрет</span>
+          <span class="info-val">
+            <span id="i-secret" style="font-size:11px">{{ cfg.get('SECRET','—') }}</span>
+            <button class="copy-btn" onclick="copy(document.getElementById('i-secret').textContent)">copy</button>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="link-box" id="d-link" onclick="copy(this.textContent)">{{ cfg.get('LINK','Ссылка не найдена') }}</div>
+    <div class="link-hint">Нажми на ссылку чтобы скопировать</div>
+  </div>
+
+  <!-- PROXY -->
+  <div class="page" id="page-proxy">
+    <div class="page-header">
       <div class="page-title">Управление прокси</div>
-      <div class="page-sub">Запуск, остановка, перезапуск MTProto контейнера</div>
+      <div class="page-sub">Запуск, остановка, пересоздание MTProto прокси</div>
+    </div>
 
-      <div class="section">
-        <div class="section-header"><span class="section-title">🔌 Действия</span></div>
-        <div class="section-body">
-          <div class="btn-row">
-            <button class="btn btn-success" onclick="proxyAction('start')">▶ Запустить</button>
-            <button class="btn btn-neutral" onclick="proxyAction('restart')">↻ Рестарт</button>
-            <button class="btn btn-danger"  onclick="proxyAction('stop')">■ Остановить</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="section">
-        <div class="section-header"><span class="section-title">🔁 Пересоздать с новым секретом</span></div>
-        <div class="section-body">
-          <p style="font-size:12px;color:var(--muted);margin-bottom:16px">Выбери домен для Fake TLS и нажми пересоздать. Все текущие подключения сбросятся.</p>
-          <div class="input-group">
-            <div class="field">
-              <label>Fake TLS домен</label>
-              <select id="domain-select">
-                <option value="ya.ru">ya.ru ⭐⭐⭐⭐⭐</option>
-                <option value="vk.com">vk.com ⭐⭐⭐⭐⭐</option>
-                <option value="mail.ru">mail.ru ⭐⭐⭐⭐</option>
-                <option value="google.com">google.com ⭐⭐⭐⭐</option>
-                <option value="cloudflare.com">cloudflare.com ⭐⭐⭐⭐</option>
-              </select>
-            </div>
-            <div class="field" style="flex:0">
-              <label>Свой домен</label>
-              <input type="text" id="domain-custom" placeholder="example.com">
-            </div>
-            <button class="btn btn-purple" onclick="regenProxy()" style="flex:0;height:40px;margin-top:auto">🔁 Пересоздать</button>
-          </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">Быстрые действия</span></div>
+      <div class="card-body">
+        <div class="btn-row">
+          <button class="btn btn-success" onclick="pAction('start')">▶ Запустить</button>
+          <button class="btn btn-ghost"   onclick="pAction('restart')">↻ Рестарт</button>
+          <button class="btn btn-danger"  onclick="pAction('stop')">■ Остановить</button>
         </div>
       </div>
     </div>
 
-    <!-- Bot -->
-    <div class="page" id="page-bot">
+    <div class="card">
+      <div class="card-header"><span class="card-title">Пересоздать с новым секретом</span></div>
+      <div class="card-body">
+        <p style="font-size:12px;color:var(--muted);margin-bottom:16px">Выбери домен и нажми пересоздать. Все текущие подключения сбросятся, новая ссылка появится на дашборде.</p>
+        <div class="input-row">
+          <div class="field">
+            <label>Домен Fake TLS</label>
+            <select id="dom-sel">
+              <option value="ya.ru">ya.ru</option>
+              <option value="vk.com">vk.com</option>
+              <option value="mail.ru">mail.ru</option>
+              <option value="google.com">google.com</option>
+              <option value="cloudflare.com">cloudflare.com</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Или свой домен</label>
+            <input type="text" id="dom-custom" placeholder="example.com">
+          </div>
+        </div>
+        <button class="btn btn-purple" onclick="regen()">🔁 Пересоздать прокси</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOT -->
+  <div class="page" id="page-bot">
+    <div class="page-header">
       <div class="page-title">Управление ботом</div>
       <div class="page-sub">Telegram бот @memes4u1337</div>
-
-      <div class="section">
-        <div class="section-header"><span class="section-title">🤖 Действия</span></div>
-        <div class="section-body">
-          <div class="btn-row">
-            <button class="btn btn-success" onclick="botAction('start')">▶ Запустить</button>
-            <button class="btn btn-neutral" onclick="botAction('restart')">↻ Рестарт</button>
-            <button class="btn btn-danger"  onclick="botAction('stop')">■ Остановить</button>
-          </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">Действия</span></div>
+      <div class="card-body">
+        <div class="btn-row">
+          <button class="btn btn-success" onclick="bAction('start')">▶ Запустить</button>
+          <button class="btn btn-ghost"   onclick="bAction('restart')">↻ Рестарт</button>
+          <button class="btn btn-danger"  onclick="bAction('stop')">■ Остановить</button>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- Logs -->
-    <div class="page" id="page-logs">
+  <!-- LOGS -->
+  <div class="page" id="page-logs">
+    <div class="page-header">
       <div class="page-title">Логи прокси</div>
-      <div class="page-sub">Последние записи из Docker контейнера</div>
-
-      <div class="section">
-        <div class="section-header">
-          <span class="section-title">📋 Вывод</span>
-          <div class="btn-row">
-            <button class="btn btn-neutral" onclick="loadLogs(50)">50 строк</button>
-            <button class="btn btn-neutral" onclick="loadLogs(100)">100 строк</button>
-            <button class="btn btn-primary" onclick="loadLogs(50)">↻ Обновить</button>
-          </div>
-        </div>
-        <div class="section-body">
-          <div class="log-box" id="log-box">Нажми Обновить для загрузки логов...</div>
+      <div class="page-sub">Вывод из Docker контейнера</div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Вывод</span>
+        <div class="btn-row">
+          <button class="btn btn-ghost" style="padding:6px 12px;font-size:12px" onclick="loadLogs(50)">50 строк</button>
+          <button class="btn btn-ghost" style="padding:6px 12px;font-size:12px" onclick="loadLogs(100)">100 строк</button>
+          <button class="btn btn-primary" style="padding:6px 12px;font-size:12px" onclick="loadLogs(50)">↻ Обновить</button>
         </div>
       </div>
+      <div class="card-body">
+        <div class="log-box" id="log-box">Нажми Обновить...</div>
+      </div>
     </div>
+  </div>
 
-    <!-- Settings -->
-    <div class="page" id="page-settings">
+  <!-- SETTINGS -->
+  <div class="page" id="page-settings">
+    <div class="page-header">
       <div class="page-title">Настройки</div>
       <div class="page-sub">Управление доступом к панели</div>
-
-      <div class="section">
-        <div class="section-header"><span class="section-title">🔐 Смена пароля</span></div>
-        <div class="section-body">
-          <div class="field" style="margin-bottom:14px">
-            <label>Текущий пароль</label>
-            <input type="password" id="pw-old" placeholder="Введи текущий пароль">
-          </div>
-          <div class="field" style="margin-bottom:14px">
-            <label>Новый пароль</label>
-            <input type="password" id="pw-new" placeholder="Минимум 6 символов">
-          </div>
-          <div class="field" style="margin-bottom:20px">
-            <label>Повтори новый пароль</label>
-            <input type="password" id="pw-confirm" placeholder="Повтори пароль">
-          </div>
-          <button class="btn btn-primary" onclick="changePassword()">Сохранить пароль</button>
-        </div>
+    </div>
+    <div class="card" style="max-width:420px">
+      <div class="card-header"><span class="card-title">Смена пароля</span></div>
+      <div class="card-body">
+        <div class="field"><label>Текущий пароль</label><input type="password" id="pw-old" placeholder="Введи текущий пароль"></div>
+        <div class="field"><label>Новый пароль</label><input type="password" id="pw-new" placeholder="Минимум 6 символов"></div>
+        <div class="field"><label>Повтор нового пароля</label><input type="password" id="pw-c" placeholder="Повтори пароль"></div>
+        <button class="btn btn-primary" onclick="changePw()">Сохранить</button>
       </div>
     </div>
+  </div>
 
-  </main>
-</div>
+</main>
 
-<!-- Toast -->
-<div class="toast" id="toast">
-  <span id="toast-icon"></span>
-  <span id="toast-msg"></span>
-</div>
+<div class="toast" id="toast"><span id="t-icon"></span><span id="t-msg"></span></div>
 
 <script>
-// ── Navigation ──────────────────────────────────────────────────
-function showPage(name, el) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('page-' + name).classList.add('active');
+function go(name,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
   el.classList.add('active');
-  if (name === 'logs') loadLogs(50);
+  if(name==='logs')loadLogs(50);
 }
-
-// ── Toast ───────────────────────────────────────────────────────
-function toast(msg, ok=true) {
-  const el = document.getElementById('toast');
-  document.getElementById('toast-icon').textContent = ok ? '✅' : '❌';
-  document.getElementById('toast-msg').textContent = msg;
-  el.className = 'toast show ' + (ok ? 'ok' : 'err');
-  setTimeout(() => el.classList.remove('show'), 3500);
+function toast(msg,ok=true){
+  const el=document.getElementById('toast');
+  document.getElementById('t-icon').textContent=ok?'✅':'❌';
+  document.getElementById('t-msg').textContent=msg;
+  el.className='toast show '+(ok?'ok':'err');
+  setTimeout(()=>el.classList.remove('show'),3500);
 }
-
-// ── Copy ────────────────────────────────────────────────────────
-function copyText(text) {
-  navigator.clipboard.writeText(text.trim()).then(() => toast('Скопировано!'));
+function copy(t){navigator.clipboard.writeText(t.trim()).then(()=>toast('Скопировано!'))}
+async function api(url,method='GET',body=null){
+  const o={method,headers:{'Content-Type':'application/json'}};
+  if(body)o.body=JSON.stringify(body);
+  return (await fetch(url,o)).json();
 }
-
-// ── API call ────────────────────────────────────────────────────
-async function api(url, method='GET', body=null) {
-  const opts = { method, headers: {'Content-Type':'application/json'} };
-  if (body) opts.body = JSON.stringify(body);
-  const r = await fetch(url, opts);
-  return r.json();
+async function refresh(){
+  const d=await api('/api/status');
+  document.getElementById('d-conn').textContent=d.connections;
+  document.getElementById('d-uptime').textContent=d.uptime;
+  document.getElementById('i-server').textContent=d.server;
+  document.getElementById('i-port').textContent=d.port;
+  document.getElementById('i-domain').textContent=d.domain;
+  document.getElementById('i-secret').textContent=d.secret;
+  document.getElementById('d-link').textContent=d.link;
+  toast('Обновлено');
 }
-
-// ── Status refresh ──────────────────────────────────────────────
-async function refreshStatus() {
-  const data = await api('/api/status');
-  document.getElementById('dash-connections').textContent = data.connections;
-  document.getElementById('dash-uptime').textContent = data.uptime;
-  document.getElementById('info-server').textContent = data.server;
-  document.getElementById('info-port').textContent = data.port;
-  document.getElementById('info-domain').textContent = data.domain;
-  document.getElementById('info-secret').textContent = data.secret;
-  document.getElementById('info-link').textContent = data.link;
-  document.getElementById('dash-link').textContent = data.link;
-  toast('Статус обновлён');
+async function pAction(a){
+  toast('Выполняю...');
+  const d=await api('/api/proxy/'+a,'POST');
+  toast(d.msg,d.ok);
 }
-
-// ── Proxy actions ───────────────────────────────────────────────
-async function proxyAction(action) {
-  const labels = {start:'Запускаю...', restart:'Рестарт...', stop:'Останавливаю...'};
-  toast(labels[action] || '...', true);
-  const data = await api('/api/proxy/' + action, 'POST');
-  toast(data.msg, data.ok);
+async function bAction(a){
+  const d=await api('/api/bot/'+a,'POST');
+  toast(d.msg,d.ok);
 }
-
-// ── Bot actions ─────────────────────────────────────────────────
-async function botAction(action) {
-  const data = await api('/api/bot/' + action, 'POST');
-  toast(data.msg, data.ok);
-}
-
-// ── Regen proxy ─────────────────────────────────────────────────
-async function regenProxy() {
-  const custom = document.getElementById('domain-custom').value.trim();
-  const select = document.getElementById('domain-select').value;
-  const domain = custom || select;
-  toast('Пересоздаю прокси... (~30 сек)', true);
-  const data = await api('/api/proxy/regen', 'POST', {domain});
-  toast(data.msg, data.ok);
-  if (data.ok && data.link) {
-    document.getElementById('dash-link').textContent = data.link;
-    document.getElementById('info-link').textContent = data.link;
+async function regen(){
+  const custom=document.getElementById('dom-custom').value.trim();
+  const sel=document.getElementById('dom-sel').value;
+  const domain=custom||sel;
+  toast('Пересоздаю... (~30 сек)');
+  const d=await api('/api/proxy/regen','POST',{domain});
+  toast(d.msg,d.ok);
+  if(d.ok&&d.link){
+    document.getElementById('d-link').textContent=d.link;
   }
 }
-
-// ── Logs ────────────────────────────────────────────────────────
-async function loadLogs(lines=50) {
-  document.getElementById('log-box').textContent = 'Загрузка...';
-  const data = await api('/api/logs?lines=' + lines);
-  document.getElementById('log-box').textContent = data.logs;
-  const lb = document.getElementById('log-box');
-  lb.scrollTop = lb.scrollHeight;
+async function loadLogs(n=50){
+  document.getElementById('log-box').textContent='Загрузка...';
+  const d=await api('/api/logs?lines='+n);
+  const lb=document.getElementById('log-box');
+  lb.textContent=d.logs;
+  lb.scrollTop=lb.scrollHeight;
 }
-
-// ── Change password ─────────────────────────────────────────────
-async function changePassword() {
-  const old_pw = document.getElementById('pw-old').value;
-  const new_pw = document.getElementById('pw-new').value;
-  const confirm = document.getElementById('pw-confirm').value;
-  if (new_pw !== confirm) { toast('Пароли не совпадают', false); return; }
-  if (new_pw.length < 6)  { toast('Минимум 6 символов', false); return; }
-  const data = await api('/api/change-password', 'POST', {old_password:old_pw, new_password:new_pw});
-  toast(data.msg, data.ok);
-  if (data.ok) {
-    document.getElementById('pw-old').value = '';
-    document.getElementById('pw-new').value = '';
-    document.getElementById('pw-confirm').value = '';
-  }
+async function changePw(){
+  const old=document.getElementById('pw-old').value;
+  const nw=document.getElementById('pw-new').value;
+  const c=document.getElementById('pw-c').value;
+  if(nw!==c){toast('Пароли не совпадают',false);return}
+  if(nw.length<6){toast('Минимум 6 символов',false);return}
+  const d=await api('/api/change-password','POST',{old_password:old,new_password:nw});
+  toast(d.msg,d.ok);
+  if(d.ok){['pw-old','pw-new','pw-c'].forEach(id=>document.getElementById(id).value='')}
 }
-
-// ── Auto-refresh ────────────────────────────────────────────────
-setInterval(refreshStatus, 30000);
+setInterval(refresh,30000);
 </script>
 </body>
 </html>

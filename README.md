@@ -4,9 +4,6 @@
 
 **Собственный MTProto прокси для Telegram + бот управления**
 
-![GitHub stars](https://img.shields.io/github/stars/memes4u1337/proxy-telegram-memes4u1337?style=flat-square)
-![Telegram](https://img.shields.io/badge/Telegram-@memes4u1337-blue?style=flat-square&logo=telegram)
-
 </div>
 
 ---

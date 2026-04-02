@@ -18,7 +18,6 @@ from aiogram.filters import Command, CommandStart
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.markdown import hbold, hcode
 
-# ── Настройки ──────────────────────────────────────────────────
 BOT_TOKEN      = os.getenv("BOT_TOKEN", "")
 ADMIN_ID       = int(os.getenv("ADMIN_ID", "0"))
 CONTAINER_NAME = os.getenv("CONTAINER_NAME", "mtproto-memes4u1337")
@@ -67,7 +66,6 @@ def save_user(user: types.User):
 def is_admin(user_id: int) -> bool:
     return user_id == ADMIN_ID
 
-
 def read_config() -> dict:
     cfg = {}
     try:
@@ -81,7 +79,6 @@ def read_config() -> dict:
         pass
     return cfg
 
-
 def docker_running() -> bool:
     try:
         result = subprocess.run(
@@ -93,7 +90,6 @@ def docker_running() -> bool:
     except:
         return False
 
-
 def docker_logs(lines: int = 20) -> str:
     try:
         result = subprocess.run(
@@ -104,7 +100,6 @@ def docker_logs(lines: int = 20) -> str:
     except Exception as e:
         return f"Ошибка: {e}"
 
-
 def docker_action(action: str) -> tuple[bool, str]:
     try:
         result = subprocess.run(
@@ -114,7 +109,6 @@ def docker_action(action: str) -> tuple[bool, str]:
         return result.returncode == 0, result.stdout.strip() or result.stderr.strip()
     except Exception as e:
         return False, str(e)
-
 
 def uptime() -> str:
     try:
@@ -132,72 +126,87 @@ def uptime() -> str:
         pass
     return "неизвестно"
 
-
 # ── Клавиатуры ─────────────────────────────────────────────────
 
 def main_kb() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=[
         [
-            InlineKeyboardButton(text="Статус",    callback_data="status"),
-            InlineKeyboardButton(text="Ссылка",    callback_data="link"),
+            InlineKeyboardButton(text="📊 Статус",       callback_data="status"),
+            InlineKeyboardButton(text="🔄 Рестарт",      callback_data="restart"),
         ],
         [
-            InlineKeyboardButton(text="Рестарт",   callback_data="restart"),
-            InlineKeyboardButton(text="Логи",      callback_data="logs"),
+            InlineKeyboardButton(text="📋 Логи",         callback_data="logs"),
+            InlineKeyboardButton(text="🔁 Новый секрет", callback_data="regen"),
         ],
         [
-            InlineKeyboardButton(text="Новый секрет", callback_data="regen"),
+            InlineKeyboardButton(text="🔗 Подключиться к прокси", callback_data="link"),
         ],
         [
-            InlineKeyboardButton(text="GitHub", url="https://github.com/memes4u1337/proxy-telegram-memes4u1337"),
+            InlineKeyboardButton(text="⭐ GitHub", url="https://github.com/memes4u1337/proxy-telegram-memes4u1337"),
         ],
     ])
 
+def link_kb(proxy_link: str) -> InlineKeyboardMarkup:
+    """Клавиатура со ссылкой для прямого подключения к прокси."""
+    buttons = []
+    if proxy_link:
+        buttons.append([
+            InlineKeyboardButton(text="⚡ Подключиться одним нажатием", url=proxy_link)
+        ])
+    buttons.append([
+        InlineKeyboardButton(text="◀️ Назад", callback_data="menu")
+    ])
+    return InlineKeyboardMarkup(inline_keyboard=buttons)
+
+def user_kb(proxy_link: str) -> InlineKeyboardMarkup:
+    """Клавиатура для обычных пользователей."""
+    buttons = []
+    if proxy_link:
+        buttons.append([
+            InlineKeyboardButton(text="⚡ Подключиться одним нажатием", url=proxy_link)
+        ])
+    buttons.append([
+        InlineKeyboardButton(text="⭐ GitHub", url="https://github.com/memes4u1337/proxy-telegram-memes4u1337")
+    ])
+    return InlineKeyboardMarkup(inline_keyboard=buttons)
 
 def confirm_kb(action: str) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=[
         [
-            InlineKeyboardButton(text="Да",  callback_data=f"confirm_{action}"),
-            InlineKeyboardButton(text="Нет", callback_data="cancel"),
+            InlineKeyboardButton(text="✅ Да",  callback_data=f"confirm_{action}"),
+            InlineKeyboardButton(text="❌ Нет", callback_data="cancel"),
         ]
     ])
 
-
 def back_kb() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="Назад", callback_data="menu")]
+        [InlineKeyboardButton(text="◀️ Назад", callback_data="menu")]
     ])
-
 
 # ── Хендлеры ───────────────────────────────────────────────────
 
 @dp.message(CommandStart())
 async def cmd_start(msg: types.Message):
     save_user(msg.from_user)
-    cfg = read_config()
+    cfg  = read_config()
     link = cfg.get("LINK", "")
 
     if is_admin(msg.from_user.id):
         text = (
-            f"{hbold('Бот для PROXY TELEGRAM by @memes4u1337')}\n\n"
-            f"{'Прокси работает' if docker_running() else 'Прокси не запущен'}\n\n"
+            f"👾 {hbold('Бот для PROXY TELEGRAM by @memes4u1337')}\n\n"
+            f"{'🟢 Прокси работает' if docker_running() else '🔴 Прокси не запущен'}\n\n"
             f"Выбери действие:"
         )
         await msg.answer(text, reply_markup=main_kb())
     else:
         if link:
             text = (
-                f"Привет! Это бот {hbold('PROXY TELEGRAM by @memes4u1337')}\n\n"
-                f"Ссылка для подключения:\n"
-                f"{hcode(link)}\n\n"
-                f"Нажми на ссылку или добавь вручную:\n"
-                f"Настройки -> Конфиденциальность -> Прокси -> Добавить прокси"
+                f"👋 Привет! Это бот {hbold('PROXY TELEGRAM by @memes4u1337')}\n\n"
+                f"Нажми кнопку ниже чтобы подключиться к прокси одним нажатием 👇"
             )
         else:
-            text = "Прокси ещё не настроен. Попробуй позже."
-        await msg.answer(text, reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="GitHub", url="https://github.com/memes4u1337/proxy-telegram-memes4u1337")]
-        ]))
+            text = "⚙️ Прокси ещё не настроен. Попробуй позже."
+        await msg.answer(text, reply_markup=user_kb(link))
 
 
 @dp.message(Command("status"))
@@ -218,23 +227,22 @@ async def cmd_logs(msg: types.Message):
 @dp.message(Command("restart"))
 async def cmd_restart(msg: types.Message):
     if not is_admin(msg.from_user.id): return
-    await msg.answer("Рестартнуть прокси?", reply_markup=confirm_kb("restart"))
+    await msg.answer("🔄 Рестартнуть прокси?", reply_markup=confirm_kb("restart"))
 
 @dp.message(Command("regen"))
 async def cmd_regen(msg: types.Message):
     if not is_admin(msg.from_user.id): return
-    await msg.answer("Пересоздать секрет? Все подключения сбросятся.", reply_markup=confirm_kb("regen"))
-
+    await msg.answer("⚠️ Пересоздать секрет? Все подключения сбросятся.", reply_markup=confirm_kb("regen"))
 
 # ── Callbacks ───────────────────────────────────────────────────
 
 @dp.callback_query(F.data == "menu")
 async def cb_menu(cb: types.CallbackQuery):
     if not is_admin(cb.from_user.id):
-        await cb.answer("Нет доступа", show_alert=True); return
+        await cb.answer("⛔ Нет доступа", show_alert=True); return
     text = (
-        f"{hbold('Бот для PROXY TELEGRAM by @memes4u1337')}\n\n"
-        f"{'Прокси работает' if docker_running() else 'Прокси не запущен'}\n\n"
+        f"👾 {hbold('Бот для PROXY TELEGRAM by @memes4u1337')}\n\n"
+        f"{'🟢 Прокси работает' if docker_running() else '🔴 Прокси не запущен'}\n\n"
         f"Выбери действие:"
     )
     await cb.message.edit_text(text, reply_markup=main_kb())
@@ -243,75 +251,74 @@ async def cb_menu(cb: types.CallbackQuery):
 @dp.callback_query(F.data == "status")
 async def cb_status(cb: types.CallbackQuery):
     if not is_admin(cb.from_user.id):
-        await cb.answer("Нет доступа", show_alert=True); return
-    await cb.answer("Проверяю...")
+        await cb.answer("⛔ Нет доступа", show_alert=True); return
+    await cb.answer("⏳ Проверяю...")
     await send_status(cb.message, edit=True)
 
 @dp.callback_query(F.data == "link")
 async def cb_link(cb: types.CallbackQuery):
     if not is_admin(cb.from_user.id):
-        await cb.answer("Нет доступа", show_alert=True); return
+        await cb.answer("⛔ Нет доступа", show_alert=True); return
     await send_link(cb.message, edit=True)
     await cb.answer()
 
 @dp.callback_query(F.data == "logs")
 async def cb_logs(cb: types.CallbackQuery):
     if not is_admin(cb.from_user.id):
-        await cb.answer("Нет доступа", show_alert=True); return
-    await cb.answer("Читаю логи...")
+        await cb.answer("⛔ Нет доступа", show_alert=True); return
+    await cb.answer("⏳ Читаю логи...")
     await send_logs(cb.message, edit=True)
 
 @dp.callback_query(F.data == "restart")
 async def cb_restart(cb: types.CallbackQuery):
     if not is_admin(cb.from_user.id):
         await cb.answer(); return
-    await cb.message.edit_text("Рестартнуть прокси?", reply_markup=confirm_kb("restart"))
+    await cb.message.edit_text("🔄 Рестартнуть прокси?", reply_markup=confirm_kb("restart"))
     await cb.answer()
 
 @dp.callback_query(F.data == "regen")
 async def cb_regen(cb: types.CallbackQuery):
     if not is_admin(cb.from_user.id):
         await cb.answer(); return
-    await cb.message.edit_text("Пересоздать секрет? Все подключения сбросятся.", reply_markup=confirm_kb("regen"))
+    await cb.message.edit_text("⚠️ Пересоздать секрет? Все подключения сбросятся.", reply_markup=confirm_kb("regen"))
     await cb.answer()
 
 @dp.callback_query(F.data == "confirm_restart")
 async def cb_confirm_restart(cb: types.CallbackQuery):
     if not is_admin(cb.from_user.id):
         await cb.answer(); return
-    await cb.message.edit_text("Рестартую...")
+    await cb.message.edit_text("🔄 Рестартую...")
     ok, out = docker_action("restart")
     if ok:
-        await cb.message.edit_text("Контейнер перезапущен!", reply_markup=back_kb())
+        await cb.message.edit_text("✅ Контейнер перезапущен!", reply_markup=back_kb())
     else:
-        await cb.message.edit_text(f"Ошибка:\n{hcode(out)}", reply_markup=back_kb())
+        await cb.message.edit_text(f"❌ Ошибка:\n{hcode(out)}", reply_markup=back_kb())
     await cb.answer()
 
 @dp.callback_query(F.data == "confirm_regen")
 async def cb_confirm_regen(cb: types.CallbackQuery):
     if not is_admin(cb.from_user.id):
         await cb.answer(); return
-    await cb.message.edit_text("Пересоздаю прокси...")
+    await cb.message.edit_text("⏳ Пересоздаю прокси...")
     try:
         result = subprocess.run(["bash", SETUP_SCRIPT], capture_output=True, text=True, timeout=120)
-        cfg = read_config()
-        link = cfg.get("LINK", "нет ссылки")
+        cfg  = read_config()
+        link = cfg.get("LINK", "")
         if result.returncode == 0:
             await cb.message.edit_text(
-                f"{hbold('Прокси пересоздан!')}\n\nНовая ссылка:\n{hcode(link)}",
-                reply_markup=back_kb()
+                f"✅ {hbold('Прокси пересоздан!')}\n\nНажми кнопку для подключения:",
+                reply_markup=link_kb(link)
             )
         else:
-            await cb.message.edit_text(f"Ошибка:\n{hcode(result.stderr[-500:])}", reply_markup=back_kb())
+            await cb.message.edit_text(f"❌ Ошибка:\n{hcode(result.stderr[-500:])}", reply_markup=back_kb())
     except subprocess.TimeoutExpired:
-        await cb.message.edit_text("Таймаут — скрипт работает слишком долго.", reply_markup=back_kb())
+        await cb.message.edit_text("⚠️ Таймаут — скрипт работает слишком долго.", reply_markup=back_kb())
     await cb.answer()
 
 @dp.callback_query(F.data == "cancel")
 async def cb_cancel(cb: types.CallbackQuery):
-    await cb.message.edit_text("Отменено.", reply_markup=back_kb())
+    await cb.message.edit_text("❌ Отменено.", reply_markup=back_kb())
     await cb.answer()
-
 
 # ── Отправка данных ─────────────────────────────────────────────
 
@@ -319,50 +326,46 @@ async def send_status(target, edit=False):
     cfg     = read_config()
     running = docker_running()
     text = (
-        f"{'Прокси работает' if running else 'Прокси не запущен'}\n\n"
-        f"Состояние:  {hbold('Online' if running else 'Offline')}\n"
-        f"Аптайм:     {uptime() if running else '—'}\n"
-        f"Сервер:     {hcode(cfg.get('SERVER', '?'))}\n"
-        f"Порт:       {cfg.get('PORT', '?')}\n"
-        f"Fake TLS:   {cfg.get('DOMAIN', '?')}\n"
-        f"Проверено:  {datetime.now().strftime('%H:%M:%S')}"
+        f"{'🟢' if running else '🔴'} {hbold('Статус PROXY TELEGRAM by @memes4u1337')}\n\n"
+        f"📡 Состояние:  {hbold('Online' if running else 'Offline')}\n"
+        f"⏱ Аптайм:     {uptime() if running else '—'}\n"
+        f"🌐 Сервер:     {hcode(cfg.get('SERVER', '?'))}\n"
+        f"🔌 Порт:       {cfg.get('PORT', '?')}\n"
+        f"🎭 Fake TLS:   {cfg.get('DOMAIN', '?')}\n"
+        f"🕐 Проверено:  {datetime.now().strftime('%H:%M:%S')}"
     )
     if edit:
         await target.edit_text(text, reply_markup=main_kb())
     else:
         await target.answer(text, reply_markup=main_kb())
 
-
 async def send_link(target, edit=False):
     cfg  = read_config()
     link = cfg.get("LINK", "")
-    if link:
-        text = (
-            f"{hbold('Ссылка для подключения')}\n\n"
-            f"PROXY TELEGRAM by @memes4u1337\n\n"
-            f"{hcode(link)}\n\n"
-            f"Сервер: {hcode(cfg.get('SERVER','?'))}\n"
-            f"Порт:   {cfg.get('PORT','?')}\n"
-            f"Секрет: {hcode(cfg.get('SECRET','?'))}"
-        )
-    else:
-        text = "Конфиг не найден. Запусти mtproto_setup.sh"
-    if edit:
-        await target.edit_text(text, reply_markup=back_kb())
-    else:
-        await target.answer(text, reply_markup=back_kb())
+    text = (
+        f"🔗 {hbold('Подключение к прокси')}\n\n"
+        f"PROXY TELEGRAM by @memes4u1337\n\n"
+        f"Нажми кнопку ниже — Telegram автоматически добавит прокси 👇\n\n"
+        f"Или вручную:\n"
+        f"🌐 Сервер: {hcode(cfg.get('SERVER','?'))}\n"
+        f"🔌 Порт:   {cfg.get('PORT','?')}\n"
+        f"🔑 Секрет: {hcode(cfg.get('SECRET','?'))}"
+    ) if link else "❌ Конфиг не найден. Запусти mtproto_setup.sh"
 
+    if edit:
+        await target.edit_text(text, reply_markup=link_kb(link))
+    else:
+        await target.answer(text, reply_markup=link_kb(link))
 
 async def send_logs(target, edit=False):
     lines = docker_logs(20)
     if len(lines) > 3000:
         lines = "...(обрезано)...\n" + lines[-3000:]
-    text = f"{hbold('Логи контейнера')}\n\n{hcode(lines)}"
+    text = f"📋 {hbold('Логи контейнера')}\n\n{hcode(lines)}"
     if edit:
         await target.edit_text(text, reply_markup=back_kb())
     else:
         await target.answer(text, reply_markup=back_kb())
-
 
 # ── Watchdog ────────────────────────────────────────────────────
 
@@ -376,39 +379,42 @@ async def watchdog():
                 log.warning("Прокси упал!")
                 await bot.send_message(
                     ADMIN_ID,
-                    f"{hbold('АЛЕРТ — PROXY TELEGRAM by @memes4u1337')}\n\n"
-                    f"Контейнер упал!\n"
-                    f"Время: {datetime.now().strftime('%H:%M:%S')}",
+                    f"🚨 {hbold('АЛЕРТ — PROXY TELEGRAM by @memes4u1337')}\n\n"
+                    f"❌ Контейнер упал!\n"
+                    f"🕐 {datetime.now().strftime('%H:%M:%S')}",
                     reply_markup=main_kb()
                 )
             elif not was_running and now_running:
+                cfg  = read_config()
+                link = cfg.get("LINK", "")
                 await bot.send_message(
                     ADMIN_ID,
-                    f"{hbold('PROXY TELEGRAM by @memes4u1337 снова работает!')}\n"
-                    f"Время: {datetime.now().strftime('%H:%M:%S')}",
-                    reply_markup=main_kb()
+                    f"✅ {hbold('PROXY TELEGRAM by @memes4u1337 снова работает!')}\n"
+                    f"🕐 {datetime.now().strftime('%H:%M:%S')}",
+                    reply_markup=link_kb(link)
                 )
             was_running = now_running
         except Exception as e:
             log.error(f"Watchdog error: {e}")
         await asyncio.sleep(CHECK_INTERVAL)
 
-
 # ── Запуск ──────────────────────────────────────────────────────
 
 async def main():
     if not BOT_TOKEN or ADMIN_ID == 0:
-        print("Укажи BOT_TOKEN и ADMIN_ID в .env файле!")
+        print("❌ Укажи BOT_TOKEN и ADMIN_ID в .env файле!")
         return
 
     log.info("Бот для PROXY TELEGRAM by @memes4u1337 запускается...")
+    cfg  = read_config()
+    link = cfg.get("LINK", "")
 
     try:
         await bot.send_message(
             ADMIN_ID,
-            f"{hbold('Бот для PROXY TELEGRAM by @memes4u1337 запущен!')}\n\n"
-            f"{'Прокси работает' if docker_running() else 'Прокси не запущен'}\n\n"
-            f"Watchdog каждые {CHECK_INTERVAL // 60} мин.",
+            f"🤖 {hbold('Бот для PROXY TELEGRAM by @memes4u1337 запущен!')}\n\n"
+            f"{'🟢 Прокси работает' if docker_running() else '🔴 Прокси не запущен'}\n\n"
+            f"⏱ Watchdog каждые {CHECK_INTERVAL // 60} мин.",
             reply_markup=main_kb()
         )
     except Exception as e:

@@ -14,8 +14,8 @@ CONFIG_FILE="${CONFIG_DIR}/config.toml"
 RESULT_FILE="/opt/mtproto_memes4u1337.conf"
 
 # ══════════════════════════════════════════════
-# ДОМЕН ДЛЯ FAKE TLS — меняй здесь:
-# ya.ru, mail.ru, vk.com, google.com
+# ДОМЕН ДЛЯ FAKE TLS — передай аргументом или меняй здесь:
+# Примеры: ya.ru  mail.ru  vk.com  google.com  cloudflare.com
 FAKE_DOMAIN="${1:-ya.ru}"
 # ══════════════════════════════════════════════
 
@@ -51,9 +51,9 @@ fi
 
 mkdir -p "$CONFIG_DIR"
 
-# ── Генерируем секрет (правильный флаг --host) ──
+# ── Генерация секрета (правильный синтаксис) ──
 log "Генерируем Fake TLS секрет для: ${YELLOW}${FAKE_DOMAIN}${NC}"
-SECRET=$(docker run --rm "$IMAGE" generate-secret tls --host "$FAKE_DOMAIN" 2>/dev/null | tr -d '[:space:]')
+SECRET=$(docker run --rm "$IMAGE" generate-secret "$FAKE_DOMAIN" 2>/dev/null | tr -d '[:space:]')
 [ -z "$SECRET" ] && die "Не удалось сгенерировать секрет. Проверь интернет."
 ok "Секрет: ${YELLOW}${SECRET}${NC}"
 
@@ -75,7 +75,7 @@ docker run -d \
     "$IMAGE" \
     > /dev/null
 
-# ── Ждём ──
+# ── Ждём запуска ──
 log "Проверяем запуск..."
 STARTED=0
 for i in {1..10}; do
@@ -89,6 +89,7 @@ done
 echo ""
 
 if [ "$STARTED" -eq 0 ]; then
+    echo -e "${RED}Логи:${NC}"
     docker logs "$CONTAINER" 2>&1 | tail -20
     die "Контейнер не запустился!"
 fi
@@ -124,10 +125,10 @@ echo -e "  ${BOLD}🔗 Ссылка для Telegram:${NC}"
 echo -e "  ${GREEN}${BOLD}${LINK}${NC}"
 echo ""
 echo -e "${CYAN}  ══════════════════════════════════════════════${NC}"
-echo -e "  Конфиг:   ${CYAN}cat ${RESULT_FILE}${NC}"
-echo -e "  Логи:     ${CYAN}docker logs -f ${CONTAINER}${NC}"
-echo -e "  Рестарт:  ${CYAN}bash mtproto_setup.sh${NC}"
-echo -e "  Др.домен: ${CYAN}bash mtproto_setup.sh mail.ru${NC}"
+echo -e "  Конфиг:    ${CYAN}cat ${RESULT_FILE}${NC}"
+echo -e "  Логи:      ${CYAN}docker logs -f ${CONTAINER}${NC}"
+echo -e "  Рестарт:   ${CYAN}bash mtproto_setup.sh${NC}"
+echo -e "  Др.домен:  ${CYAN}bash mtproto_setup.sh mail.ru${NC}"
 echo ""
 echo -e "${BOLD}📋 Логи контейнера:${NC}"
 docker logs --tail 8 "$CONTAINER" 2>&1

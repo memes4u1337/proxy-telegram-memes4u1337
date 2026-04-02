@@ -45,19 +45,20 @@ apt update && apt upgrade -y
 apt install -y curl wget git ufw python3 python3-pip unzip xxd
 curl -fsSL https://get.docker.com | bash
 systemctl enable docker && systemctl start docker
-apt install ufw -y
 apt install -y git
 ```
 
 ### 3. Файрвол
 
 ```bash
+apt install ufw -y
 ufw allow ssh && ufw allow 443/tcp && ufw --force enable
 ```
 
 ### 4. Клонировать репозиторий
 
 ```bash
+apt install -y git
 git clone https://github.com/memes4u1337/proxy-telegram-memes4u1337.git
 cd proxy-telegram-memes4u1337
 chmod +x mtproto_setup.sh install_bot.sh

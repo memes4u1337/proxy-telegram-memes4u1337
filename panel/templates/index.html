@@ -7,145 +7,66 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
-
-[data-theme="dark"]{
-  --bg:#0d0d14;
-  --sidebar:#0f0f1a;
-  --card:#13131e;
-  --card2:#16161f;
-  --border:#1f1f30;
-  --text:#f1f5f9;
-  --text2:#94a3b8;
-  --muted:#64748b;
-  --input-bg:#0d0d14;
-}
-[data-theme="light"]{
-  --bg:#f8fafc;
-  --sidebar:#ffffff;
-  --card:#ffffff;
-  --card2:#f1f5f9;
-  --border:#e2e8f0;
-  --text:#0f172a;
-  --text2:#475569;
-  --muted:#94a3b8;
-  --input-bg:#f8fafc;
-}
-:root{
-  --accent:#3b82f6;
-  --accent-glow:rgba(59,130,246,.15);
-  --green:#22c55e;
-  --green-bg:rgba(34,197,94,.1);
-  --red:#ef4444;
-  --red-bg:rgba(239,68,68,.1);
-  --purple:#8b5cf6;
-  --font:'Inter',sans-serif;
-}
-
+[data-theme="dark"]{--bg:#0d0d14;--sidebar:#0f0f1a;--card:#13131e;--card2:#16161f;--border:#1f1f30;--text:#f1f5f9;--text2:#94a3b8;--muted:#64748b;--input-bg:#0d0d14}
+[data-theme="light"]{--bg:#f8fafc;--sidebar:#ffffff;--card:#ffffff;--card2:#f1f5f9;--border:#e2e8f0;--text:#0f172a;--text2:#475569;--muted:#94a3b8;--input-bg:#f8fafc}
+:root{--accent:#3b82f6;--accent-glow:rgba(59,130,246,.15);--green:#22c55e;--green-bg:rgba(34,197,94,.1);--red:#ef4444;--red-bg:rgba(239,68,68,.1);--yellow:#f59e0b;--yellow-bg:rgba(245,158,11,.1);--purple:#8b5cf6;--font:'Inter',sans-serif}
 body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px;min-height:100vh;display:flex;transition:background .2s,color .2s}
 
-/* Sidebar */
-.sidebar{
-  width:220px;min-height:100vh;background:var(--sidebar);
-  border-right:1px solid var(--border);
-  display:flex;flex-direction:column;
-  position:fixed;top:0;left:0;bottom:0;z-index:10;
-  transition:background .2s;
-}
+.sidebar{width:220px;min-height:100vh;background:var(--sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:10;transition:background .2s}
 .sidebar-top{padding:18px 14px;border-bottom:1px solid var(--border)}
 .logo{display:flex;align-items:center;gap:10px}
-.logo-icon{
-  width:32px;height:32px;
-  background:linear-gradient(135deg,#3b82f6,#8b5cf6);
-  border-radius:8px;display:flex;align-items:center;
-  justify-content:center;font-size:15px;font-weight:700;
-  color:#fff;flex-shrink:0;
-}
+.logo-icon{width:32px;height:32px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;flex-shrink:0}
 .logo-text{font-size:13px;font-weight:700;letter-spacing:-.01em}
 .logo-sub{font-size:11px;color:var(--muted);margin-top:1px}
 .nav{padding:10px 8px;flex:1}
 .nav-label{font-size:10px;font-weight:600;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;padding:8px 8px 4px;display:block}
-.nav-item{
-  display:flex;align-items:center;gap:9px;
-  padding:8px 10px;border-radius:8px;cursor:pointer;
-  color:var(--text2);font-size:13px;font-weight:500;
-  transition:all .15s;margin-bottom:2px;
-  background:none;border:none;width:100%;text-align:left;
-  font-family:var(--font);
-}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;cursor:pointer;color:var(--text2);font-size:13px;font-weight:500;transition:all .15s;margin-bottom:2px;background:none;border:none;width:100%;text-align:left;font-family:var(--font)}
 .nav-item:hover{background:rgba(59,130,246,.06);color:var(--text)}
 .nav-item.active{background:var(--accent-glow);color:var(--accent)}
 .sidebar-bottom{padding:12px;border-top:1px solid var(--border)}
 .user-row{display:flex;align-items:center;gap:8px;padding:6px 4px;margin-bottom:8px}
-.avatar{
-  width:28px;height:28px;border-radius:7px;
-  background:linear-gradient(135deg,#3b82f6,#8b5cf6);
-  display:flex;align-items:center;justify-content:center;
-  font-size:12px;font-weight:700;color:#fff;flex-shrink:0;
-}
+.avatar{width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
 .user-name{font-size:13px;font-weight:500;color:var(--text)}
 .sidebar-actions{display:flex;gap:6px}
-.icon-btn{
-  flex:1;padding:7px;border-radius:7px;
-  background:transparent;border:1px solid var(--border);
-  color:var(--muted);font-size:12px;cursor:pointer;
-  transition:all .15s;font-family:var(--font);text-align:center;
-  text-decoration:none;display:flex;align-items:center;justify-content:center;
-}
+.icon-btn{flex:1;padding:7px;border-radius:7px;background:transparent;border:1px solid var(--border);color:var(--muted);font-size:12px;cursor:pointer;transition:all .15s;font-family:var(--font);text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center}
 .icon-btn:hover{border-color:var(--accent);color:var(--accent)}
 .icon-btn.danger:hover{border-color:var(--red);color:var(--red)}
 
-/* Main */
 .main{margin-left:220px;flex:1;padding:28px;min-height:100vh}
 .page{display:none}.page.active{display:block}
 .page-title{font-size:19px;font-weight:700;letter-spacing:-.02em;margin-bottom:4px}
 .page-sub{font-size:12px;color:var(--muted);margin-bottom:22px}
 
-/* Stats */
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px}
 .stat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;transition:background .2s}
 .stat-label{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;margin-bottom:8px}
 .stat-value{font-size:22px;font-weight:700;letter-spacing:-.02em;margin-bottom:3px}
 .stat-hint{font-size:11px;color:var(--muted)}
 
-/* Badge */
 .badge{display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border-radius:20px;font-size:12px;font-weight:600}
 .badge.on{background:var(--green-bg);color:var(--green)}
 .badge.off{background:var(--red-bg);color:var(--red)}
+.badge.warn{background:var(--yellow-bg);color:var(--yellow)}
 .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
 .dot.on{background:var(--green);animation:pulse 2s infinite}
 .dot.off{background:var(--red)}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 
-/* Card */
 .card{background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:14px;overflow:hidden;transition:background .2s}
 .card-header{padding:13px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
 .card-title{font-size:13px;font-weight:600}
 .card-body{padding:16px}
 
-/* Info rows */
 .info-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border)}
 .info-row:last-child{border:none}
 .info-key{font-size:12px;color:var(--muted);font-weight:500;flex-shrink:0}
 .info-val{font-size:12px;font-weight:500;display:flex;align-items:center;gap:6px;max-width:65%;text-align:right;word-break:break-all}
 
-/* Link box */
-.link-box{
-  background:var(--card2);border:1px solid var(--border);
-  border-radius:8px;padding:11px 13px;
-  font-size:12px;color:var(--accent);
-  word-break:break-all;line-height:1.6;
-  margin:10px 0 4px;transition:border-color .15s;
-}
+.link-box{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:11px 13px;font-size:12px;color:var(--accent);word-break:break-all;line-height:1.6;margin:10px 0 4px;transition:border-color .15s}
 .link-hint{font-size:11px;color:var(--muted);margin-bottom:14px}
 
-/* Buttons */
 .btn-row{display:flex;gap:8px;flex-wrap:wrap}
-.btn{
-  padding:8px 14px;border-radius:7px;border:none;
-  font-family:var(--font);font-size:12px;font-weight:600;
-  cursor:pointer;transition:all .15s;
-  display:inline-flex;align-items:center;gap:5px;
-}
+.btn{padding:8px 14px;border-radius:7px;border:none;font-family:var(--font);font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:5px}
 .btn:active{transform:scale(.97)}
 .btn-primary{background:var(--accent);color:#fff}
 .btn-primary:hover{background:#2563eb}
@@ -157,70 +78,46 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14
 .btn-ghost:hover{background:rgba(59,130,246,.06);color:var(--text);border-color:var(--accent)}
 .btn-purple{background:rgba(139,92,246,.1);color:var(--purple);border:1px solid rgba(139,92,246,.2)}
 .btn-purple:hover{background:rgba(139,92,246,.18)}
+.btn-yellow{background:var(--yellow-bg);color:var(--yellow);border:1px solid rgba(245,158,11,.2)}
+.btn-yellow:hover{background:rgba(245,158,11,.18)}
 
-.copy-btn{
-  padding:2px 7px;border-radius:4px;border:1px solid var(--border);
-  background:transparent;color:var(--muted);font-size:10px;
-  font-family:var(--font);cursor:pointer;transition:all .15s;flex-shrink:0;
-}
+.copy-btn{padding:2px 7px;border-radius:4px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:10px;font-family:var(--font);cursor:pointer;transition:all .15s;flex-shrink:0}
 .copy-btn:hover{border-color:var(--accent);color:var(--accent)}
 .copy-btn.copied{border-color:var(--green);color:var(--green)}
 
-/* Inputs */
 .field{margin-bottom:12px}
 .field label{display:block;font-size:11px;font-weight:500;color:var(--muted);margin-bottom:5px;letter-spacing:.02em}
-.field input,.field select{
-  width:100%;background:var(--input-bg);border:1px solid var(--border);
-  border-radius:7px;padding:8px 11px;color:var(--text);
-  font-family:var(--font);font-size:13px;outline:none;transition:all .2s;
-}
+.field input,.field select{width:100%;background:var(--input-bg);border:1px solid var(--border);border-radius:7px;padding:8px 11px;color:var(--text);font-family:var(--font);font-size:13px;outline:none;transition:all .2s}
 .field input:focus,.field select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
 .field select option{background:var(--card)}
 .input-row{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
 .input-row .field{flex:1;min-width:150px}
 
-/* Logs */
-.log-box{
-  background:var(--card2);border:1px solid var(--border);border-radius:8px;
-  padding:12px;font-size:11px;line-height:1.8;color:var(--text2);
-  max-height:400px;overflow-y:auto;white-space:pre-wrap;word-break:break-all;
-  font-family:'Courier New',monospace;
-}
+.log-box{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:11px;line-height:1.8;color:var(--text2);max-height:400px;overflow-y:auto;white-space:pre-wrap;word-break:break-all;font-family:'Courier New',monospace}
 .log-box::-webkit-scrollbar{width:4px}
 .log-box::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
 
-/* Users table */
 .table{width:100%;border-collapse:collapse}
 .table th{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;padding:8px 10px;text-align:left;border-bottom:1px solid var(--border)}
 .table td{padding:10px;font-size:13px;border-bottom:1px solid var(--border)}
 .table tr:last-child td{border:none}
-.table tr:hover td{background:rgba(59,130,246,.03)}
 .empty{text-align:center;padding:32px;color:var(--muted);font-size:13px}
 
-/* GitHub link */
-.gh-link{
-  display:flex;align-items:center;gap:8px;
-  padding:10px 14px;background:var(--card2);
-  border:1px solid var(--border);border-radius:8px;
-  color:var(--text2);text-decoration:none;font-size:13px;font-weight:500;
-  transition:all .15s;margin-top:16px;
-}
+/* SSL блок */
+.ssl-box{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:16px}
+.ssl-status{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.ssl-title{font-size:13px;font-weight:600}
+.ssl-info{font-size:12px;color:var(--muted);line-height:1.8}
+
+.gh-link{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--card2);border:1px solid var(--border);border-radius:8px;color:var(--text2);text-decoration:none;font-size:13px;font-weight:500;transition:all .15s;margin-top:16px}
 .gh-link:hover{border-color:var(--accent);color:var(--accent)}
 
-/* Toast */
-.toast{
-  position:fixed;bottom:20px;right:20px;
-  background:var(--card);border:1px solid var(--border);
-  border-radius:10px;padding:11px 16px;
-  display:flex;align-items:center;gap:8px;
-  font-size:13px;font-weight:500;z-index:999;
-  transform:translateY(80px);opacity:0;
-  transition:all .3s cubic-bezier(.34,1.56,.64,1);
-  box-shadow:0 8px 24px rgba(0,0,0,.3);
-}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:11px 16px;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;z-index:999;transform:translateY(80px);opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);box-shadow:0 8px 24px rgba(0,0,0,.3)}
 .toast.show{transform:translateY(0);opacity:1}
 .toast.ok{border-color:rgba(34,197,94,.4)}
 .toast.err{border-color:rgba(239,68,68,.4)}
+
+.divider{border:none;border-top:1px solid var(--border);margin:20px 0}
 </style>
 </head>
 <body>
@@ -235,25 +132,23 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14
       </div>
     </div>
   </div>
-
   <nav class="nav">
-    <span class="nav-label">Навигация</span>
-    <button class="nav-item active" onclick="go('dashboard',this)">Dashboard</button>
-    <button class="nav-item" onclick="go('proxy',this)">Proxy</button>
-    <button class="nav-item" onclick="go('bot',this)">Bot</button>
-    <button class="nav-item" onclick="go('users',this)">Users</button>
-    <button class="nav-item" onclick="go('logs',this)">Logs</button>
-    <button class="nav-item" onclick="go('settings',this)">Settings</button>
+    <span class="nav-label">Menu</span>
+    <button class="nav-item active" onclick="go('dashboard',this)">Панель Управления</button>
+    <button class="nav-item" onclick="go('proxy',this)">Прокси</button>
+    <button class="nav-item" onclick="go('bot',this)">Бот</button>
+    <button class="nav-item" onclick="go('users',this)">Пользователи</button>
+    <button class="nav-item" onclick="go('logs',this)">Логи</button>
+    <button class="nav-item" onclick="go('settings',this)">Н</button>
   </nav>
-
   <div class="sidebar-bottom">
     <div class="user-row">
       <div class="avatar">{{ username[0].upper() }}</div>
       <div class="user-name">{{ username }}</div>
     </div>
     <div class="sidebar-actions">
-      <button class="icon-btn" onclick="toggleTheme()" title="Сменить тему" id="theme-btn">Light</button>
-      <a href="/logout" class="icon-btn danger" title="Выйти">Logout</a>
+      <button class="icon-btn" onclick="toggleTheme()" id="theme-btn">Light</button>
+      <a href="/logout" class="icon-btn danger">Logout</a>
     </div>
   </div>
 </aside>
@@ -263,8 +158,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14
   <!-- DASHBOARD -->
   <div class="page active" id="page-dashboard">
     <div class="page-title">Dashboard</div>
-    <div class="page-sub">PROXY TELEGRAM @memes4u1337 — общий статус</div>
-
+    <div class="page-sub">PROXY TELEGRAM @memes4u1337</div>
     <div class="stats">
       <div class="stat">
         <div class="stat-label">Proxy</div>
@@ -287,6 +181,15 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14
         <div class="stat-hint">Telegram bot</div>
       </div>
       <div class="stat">
+        <div class="stat-label">SSL</div>
+        <div class="stat-value">
+          <span class="badge {% if ssl_exists %}on{% else %}warn{% endif %}">
+            {% if ssl_exists %}HTTPS{% else %}HTTP{% endif %}
+          </span>
+        </div>
+        <div class="stat-hint">Panel protocol</div>
+      </div>
+      <div class="stat">
         <div class="stat-label">Connections</div>
         <div class="stat-value" id="d-conn">{{ connections }}</div>
         <div class="stat-hint">Active now</div>
@@ -297,9 +200,9 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14
         <div class="stat-hint">Proxy uptime</div>
       </div>
       <div class="stat">
-        <div class="stat-label">Users in Bot</div>
+        <div class="stat-label">Users</div>
         <div class="stat-value">{{ users|length }}</div>
-        <div class="stat-hint">Total users</div>
+        <div class="stat-hint">Bot users total</div>
       </div>
     </div>
 
@@ -309,24 +212,12 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14
         <button class="btn btn-ghost" style="padding:5px 10px;font-size:11px" onclick="refresh()">Refresh</button>
       </div>
       <div class="card-body">
-        <div class="info-row">
-          <span class="info-key">Server</span>
-          <span class="info-val" id="i-server">{{ cfg.get('SERVER','—') }}</span>
-        </div>
-        <div class="info-row">
-          <span class="info-key">Port</span>
-          <span class="info-val" id="i-port">{{ cfg.get('PORT','—') }}</span>
-        </div>
-        <div class="info-row">
-          <span class="info-key">Fake TLS domain</span>
-          <span class="info-val" id="i-domain">{{ cfg.get('DOMAIN','—') }}</span>
-        </div>
+        <div class="info-row"><span class="info-key">Server</span><span class="info-val" id="i-server">{{ cfg.get('SERVER','—') }}</span></div>
+        <div class="info-row"><span class="info-key">Port</span><span class="info-val" id="i-port">{{ cfg.get('PORT','—') }}</span></div>
+        <div class="info-row"><span class="info-key">Fake TLS</span><span class="info-val" id="i-domain">{{ cfg.get('DOMAIN','—') }}</span></div>
         <div class="info-row">
           <span class="info-key">Secret</span>
-          <span class="info-val">
-            <span id="i-secret" style="font-size:11px">{{ cfg.get('SECRET','—') }}</span>
-            <button class="copy-btn" onclick="copyEl('i-secret',this)">copy</button>
-          </span>
+          <span class="info-val"><span id="i-secret" style="font-size:11px">{{ cfg.get('SECRET','—') }}</span><button class="copy-btn" onclick="copyEl('i-secret',this)">copy</button></span>
         </div>
         <div class="info-row">
           <span class="info-key">Link</span>
@@ -354,25 +245,22 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14
   <div class="page" id="page-proxy">
     <div class="page-title">Proxy</div>
     <div class="page-sub">Управление MTProto контейнером</div>
-
     <div class="card">
       <div class="card-header"><span class="card-title">Actions</span></div>
       <div class="card-body">
         <div class="btn-row">
           <button class="btn btn-success" onclick="pAction('start')">Start</button>
-          <button class="btn btn-ghost"   onclick="pAction('restart')">Restart</button>
-          <button class="btn btn-danger"  onclick="pAction('stop')">Stop</button>
+          <button class="btn btn-ghost" onclick="pAction('restart')">Restart</button>
+          <button class="btn btn-danger" onclick="pAction('stop')">Stop</button>
         </div>
       </div>
     </div>
-
     <div class="card">
       <div class="card-header"><span class="card-title">Recreate with new secret</span></div>
       <div class="card-body">
         <p style="font-size:12px;color:var(--muted);margin-bottom:14px">Выбери домен Fake TLS и пересоздай прокси. Все подключения сбросятся.</p>
         <div class="input-row">
-          <div class="field">
-            <label>Fake TLS Domain</label>
+          <div class="field"><label>Fake TLS Domain</label>
             <select id="dom-sel">
               <option value="ya.ru">ya.ru</option>
               <option value="vk.com">vk.com</option>
@@ -381,10 +269,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14
               <option value="cloudflare.com">cloudflare.com</option>
             </select>
           </div>
-          <div class="field">
-            <label>Custom domain</label>
-            <input type="text" id="dom-custom" placeholder="example.com">
-          </div>
+          <div class="field"><label>Custom domain</label><input type="text" id="dom-custom" placeholder="example.com"></div>
         </div>
         <button class="btn btn-purple" onclick="regen()">Recreate proxy</button>
       </div>
@@ -400,8 +285,8 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14
       <div class="card-body">
         <div class="btn-row">
           <button class="btn btn-success" onclick="bAction('start')">Start</button>
-          <button class="btn btn-ghost"   onclick="bAction('restart')">Restart</button>
-          <button class="btn btn-danger"  onclick="bAction('stop')">Stop</button>
+          <button class="btn btn-ghost" onclick="bAction('restart')">Restart</button>
+          <button class="btn btn-danger" onclick="bAction('stop')">Stop</button>
         </div>
       </div>
     </div>
@@ -417,15 +302,8 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14
         <button class="btn btn-ghost" style="font-size:11px;padding:5px 10px" onclick="loadUsers()">Refresh</button>
       </div>
       <div class="card-body" style="padding:0">
-        <table class="table" id="users-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Username</th>
-              <th>Name</th>
-              <th>First seen</th>
-            </tr>
-          </thead>
+        <table class="table">
+          <thead><tr><th>ID</th><th>Username</th><th>Name</th><th>First seen</th></tr></thead>
           <tbody id="users-body">
             {% if users %}
               {% for u in users %}
@@ -437,7 +315,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14
               </tr>
               {% endfor %}
             {% else %}
-              <tr><td colspan="4" class="empty">No users yet. Users appear when they write /start to the bot.</td></tr>
+              <tr><td colspan="4" class="empty">No users yet.</td></tr>
             {% endif %}
           </tbody>
         </table>
@@ -453,21 +331,62 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14
       <div class="card-header">
         <span class="card-title">Container logs</span>
         <div class="btn-row">
-          <button class="btn btn-ghost" style="font-size:11px;padding:5px 10px" onclick="loadLogs(50)">50 lines</button>
-          <button class="btn btn-ghost" style="font-size:11px;padding:5px 10px" onclick="loadLogs(100)">100 lines</button>
+          <button class="btn btn-ghost" style="font-size:11px;padding:5px 10px" onclick="loadLogs(50)">50</button>
+          <button class="btn btn-ghost" style="font-size:11px;padding:5px 10px" onclick="loadLogs(100)">100</button>
           <button class="btn btn-primary" style="font-size:11px;padding:5px 10px" onclick="loadLogs(50)">Refresh</button>
         </div>
       </div>
-      <div class="card-body">
-        <div class="log-box" id="log-box">Click Refresh to load logs...</div>
-      </div>
+      <div class="card-body"><div class="log-box" id="log-box">Click Refresh...</div></div>
     </div>
   </div>
 
   <!-- SETTINGS -->
   <div class="page" id="page-settings">
     <div class="page-title">Settings</div>
-    <div class="page-sub">Управление доступом к панели</div>
+    <div class="page-sub">Безопасность и управление панелью</div>
+
+    <!-- SSL -->
+    <div class="card">
+      <div class="card-header"><span class="card-title">SSL Certificate</span></div>
+      <div class="card-body">
+        <div class="ssl-box">
+          <div class="ssl-status">
+            <span class="badge {% if ssl_exists %}on{% else %}warn{% endif %}">
+              {% if ssl_exists %}HTTPS активен{% else %}HTTP — без шифрования{% endif %}
+            </span>
+          </div>
+          {% if ssl_exists and ssl_info %}
+          <div class="ssl-info">
+            {% for k,v in ssl_info.items() %}
+            <div><strong>{{ k }}:</strong> {{ v }}</div>
+            {% endfor %}
+          </div>
+          {% else %}
+          <div class="ssl-info">Сертификат не установлен. Панель работает по HTTP.<br>Сгенерируй самоподписанный сертификат — браузер покажет предупреждение, но соединение будет зашифровано.</div>
+          {% endif %}
+        </div>
+
+        {% if not ssl_exists %}
+        <div class="input-row" style="margin-bottom:14px">
+          <div class="field"><label>Срок действия (дней)</label><input type="number" id="ssl-days" value="365" min="30" max="3650"></div>
+          <div class="field"><label>Страна (2 буквы)</label><input type="text" id="ssl-country" value="RU" maxlength="2" style="text-transform:uppercase"></div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-success" onclick="generateSSL()">Generate SSL certificate</button>
+        </div>
+        <p style="font-size:11px;color:var(--muted);margin-top:10px">После генерации панель перезапустится на HTTPS. Обнови страницу через https://</p>
+        {% else %}
+        <div class="btn-row">
+          <button class="btn btn-danger" onclick="removeSSL()">Remove SSL — switch to HTTP</button>
+        </div>
+        <p style="font-size:11px;color:var(--muted);margin-top:10px">Панель переключится обратно на HTTP.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Password -->
     <div class="card" style="max-width:400px">
       <div class="card-header"><span class="card-title">Change password</span></div>
       <div class="card-body">
@@ -488,7 +407,6 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14
 const saved = localStorage.getItem('theme') || 'dark';
 document.documentElement.setAttribute('data-theme', saved);
 document.getElementById('theme-btn').textContent = saved === 'dark' ? 'Light' : 'Dark';
-
 function toggleTheme() {
   const cur = document.documentElement.getAttribute('data-theme');
   const next = cur === 'dark' ? 'light' : 'dark';
@@ -513,33 +431,36 @@ function toast(msg, ok = true) {
   document.getElementById('t-icon').textContent = ok ? '✓' : '✗';
   document.getElementById('t-msg').textContent = msg;
   el.className = 'toast show ' + (ok ? 'ok' : 'err');
-  setTimeout(() => el.classList.remove('show'), 3000);
+  setTimeout(() => el.classList.remove('show'), 3500);
 }
 
-// Copy — рабочая функция
+// Copy с fallback для HTTP
 function copyEl(id, btn) {
   const text = document.getElementById(id).textContent.trim();
   if (!text || text === '—') { toast('Nothing to copy', false); return; }
-  navigator.clipboard.writeText(text).then(() => {
-    toast('Copied!');
+  const doCopy = () => {
     if (btn) {
       const orig = btn.textContent;
       btn.textContent = 'done';
       btn.classList.add('copied');
       setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 1500);
     }
-  }).catch(() => {
-    // Fallback для HTTP
-    const ta = document.createElement('textarea');
-    ta.value = text;
-    ta.style.position = 'fixed';
-    ta.style.opacity = '0';
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
     toast('Copied!');
-  });
+  };
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(doCopy).catch(() => fallbackCopy(text, doCopy));
+  } else {
+    fallbackCopy(text, doCopy);
+  }
+}
+function fallbackCopy(text, cb) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
+  document.body.appendChild(ta);
+  ta.focus(); ta.select();
+  try { document.execCommand('copy'); cb(); } catch(e) { toast('Copy failed', false); }
+  document.body.removeChild(ta);
 }
 
 // API
@@ -550,7 +471,6 @@ async function api(url, method = 'GET', body = null) {
   return r.json();
 }
 
-// Refresh status
 async function refresh() {
   const d = await api('/api/status');
   document.getElementById('d-conn').textContent = d.connections;
@@ -564,73 +484,91 @@ async function refresh() {
   toast('Refreshed');
 }
 
-// Proxy
-async function pAction(a) {
-  toast('Working...');
-  const d = await api('/api/proxy/' + a, 'POST');
-  toast(d.msg, d.ok);
-}
+async function pAction(a) { toast('Working...'); const d = await api('/api/proxy/'+a,'POST'); toast(d.msg,d.ok); }
+async function bAction(a) { const d = await api('/api/bot/'+a,'POST'); toast(d.msg,d.ok); }
 
-// Bot
-async function bAction(a) {
-  const d = await api('/api/bot/' + a, 'POST');
-  toast(d.msg, d.ok);
-}
-
-// Regen
 async function regen() {
   const custom = document.getElementById('dom-custom').value.trim();
-  const sel = document.getElementById('dom-sel').value;
-  const domain = custom || sel;
+  const domain = custom || document.getElementById('dom-sel').value;
   toast('Recreating... (~30s)');
-  const d = await api('/api/proxy/regen', 'POST', { domain });
-  toast(d.msg, d.ok);
+  const d = await api('/api/proxy/regen','POST',{domain});
+  toast(d.msg,d.ok);
   if (d.ok && d.link) {
     document.getElementById('d-link').textContent = d.link;
     document.getElementById('i-link').textContent = d.link;
   }
 }
 
-// Logs
-async function loadLogs(n = 50) {
+async function loadLogs(n=50) {
   document.getElementById('log-box').textContent = 'Loading...';
-  const d = await api('/api/logs?lines=' + n);
+  const d = await api('/api/logs?lines='+n);
   const lb = document.getElementById('log-box');
   lb.textContent = d.logs;
   lb.scrollTop = lb.scrollHeight;
 }
 
-// Users
 async function loadUsers() {
   const d = await api('/api/users');
   const tbody = document.getElementById('users-body');
-  if (!d.users || d.users.length === 0) {
+  if (!d.users || !d.users.length) {
     tbody.innerHTML = '<tr><td colspan="4" class="empty">No users yet.</td></tr>';
     return;
   }
   tbody.innerHTML = d.users.map(u => `
     <tr>
       <td style="font-family:monospace;font-size:12px">${u.id}</td>
-      <td>${u.username || '—'}</td>
-      <td>${u.name || '—'}</td>
-      <td style="color:var(--muted);font-size:12px">${u.date || '—'}</td>
-    </tr>
-  `).join('');
+      <td>${u.username||'—'}</td>
+      <td>${u.name||'—'}</td>
+      <td style="color:var(--muted);font-size:12px">${u.date||'—'}</td>
+    </tr>`).join('');
 }
 
-// Change password
+// SSL
+async function generateSSL() {
+  const days = document.getElementById('ssl-days').value;
+  const country = document.getElementById('ssl-country').value.toUpperCase();
+  toast('Generating certificate...', true);
+  const d = await api('/api/ssl/generate','POST',{days:parseInt(days),country});
+  if (d.ok) {
+    toast(d.msg, true);
+    setTimeout(() => {
+      const proto = 'https';
+      const host = window.location.hostname;
+      const port = window.location.port;
+      window.location.href = `${proto}://${host}:${port}`;
+    }, 3000);
+  } else {
+    toast(d.msg, false);
+  }
+}
+
+async function removeSSL() {
+  if (!confirm('Switch panel to HTTP?')) return;
+  toast('Removing SSL...', true);
+  const d = await api('/api/ssl/remove','POST');
+  if (d.ok) {
+    toast(d.msg, true);
+    setTimeout(() => {
+      const host = window.location.hostname;
+      const port = window.location.port;
+      window.location.href = `http://${host}:${port}`;
+    }, 3000);
+  } else {
+    toast(d.msg, false);
+  }
+}
+
 async function changePw() {
   const old = document.getElementById('pw-old').value;
   const nw = document.getElementById('pw-new').value;
   const c = document.getElementById('pw-c').value;
   if (nw !== c) { toast('Passwords do not match', false); return; }
   if (nw.length < 6) { toast('Min 6 characters', false); return; }
-  const d = await api('/api/change-password', 'POST', { old_password: old, new_password: nw });
+  const d = await api('/api/change-password','POST',{old_password:old,new_password:nw});
   toast(d.msg, d.ok);
   if (d.ok) ['pw-old','pw-new','pw-c'].forEach(id => document.getElementById(id).value = '');
 }
 
-// Auto-refresh every 30s
 setInterval(refresh, 30000);
 </script>
 </body>

@@ -98,10 +98,9 @@ systemctl start mtproto-bot
 
 | Домен | Надёжность |
 |-------|-----------|
-| `www.google.com` | ⭐⭐⭐⭐⭐ |
-| `cloudflare.com` | ⭐⭐⭐⭐⭐ |
-| `www.microsoft.com` | ⭐⭐⭐⭐ |
-| `apple.com` | ⭐⭐⭐⭐ |
+| `ya.ru` | ⭐⭐⭐⭐⭐ |
+| `max.ru` | ⭐⭐⭐⭐⭐ |
+| `vk.com` | ⭐⭐⭐⭐ |
 
 ---
 

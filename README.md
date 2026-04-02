@@ -1,37 +1,40 @@
 <div align="center">
 
-# 🚀 PROXY TELEGRAM by @memes4u1337
+# PROXY TELEGRAM by @memes4u1337
 
-**Собственный MTProto прокси для Telegram + бот управления**
+**Собственный MTProto прокси для Telegram + бот управления + веб-панель**
 
 </div>
 
 ---
 
-## ✨ Что это
+## Что это
 
 Полный комплект для запуска личного MTProto прокси:
 
-- 🔒 **Fake TLS** — трафик выглядит как обычный HTTPS
-- 🤖 **Telegram бот** — управление прямо с телефона
-- 🔔 **Watchdog** — алерт если прокси упал
-- ♻️ **Автозапуск** — поднимается сам после перезагрузки сервера
+- **Fake TLS** — трафик выглядит как обычный HTTPS
+- **Telegram бот** — управление прямо с телефона
+- **Веб-панель** — полноценный дашборд в браузере
+- **Watchdog** — алерт если прокси упал
+- **Автозапуск** — поднимается сам после перезагрузки сервера
 
 ---
 
-## 📦 Файлы
+## Файлы
 
 | Файл | Описание |
 |------|----------|
 | `bot.py` | Telegram бот (управление + мониторинг) |
 | `mtproto_setup.sh` | Установка прокси |
 | `install_bot.sh` | Установка бота как системного сервиса |
-| `requirements.txt` | Python зависимости |
+| `requirements.txt` | Python зависимости бота |
 | `env.example` | Шаблон конфига (переименуй в `.env`) |
+| `panel/app.py` | Веб-панель (Flask) |
+| `panel/install_panel.sh` | Установка панели |
 
 ---
 
-## ⚡ Быстрый старт
+## Быстрый старт
 
 ### 1. Требования
 
@@ -45,20 +48,18 @@ apt update && apt upgrade -y
 apt install -y curl wget git ufw python3 python3-pip unzip xxd
 curl -fsSL https://get.docker.com | bash
 systemctl enable docker && systemctl start docker
-apt install -y git
 ```
 
 ### 3. Файрвол
 
 ```bash
-apt install ufw -y
+apt install -y ufw
 ufw allow ssh && ufw allow 443/tcp && ufw --force enable
 ```
 
 ### 4. Клонировать репозиторий
 
 ```bash
-apt install -y git
 git clone https://github.com/memes4u1337/proxy-telegram-memes4u1337.git
 cd proxy-telegram-memes4u1337
 chmod +x mtproto_setup.sh install_bot.sh
@@ -68,8 +69,6 @@ chmod +x mtproto_setup.sh install_bot.sh
 
 ```bash
 bash mtproto_setup.sh
-apt install -y xxd
-curl -fsSL https://get.docker.com | bash
 ```
 
 Или с конкретным доменом:
@@ -114,11 +113,31 @@ systemctl start mtproto-bot
 systemctl status mtproto-bot
 ```
 
-Бот пришлёт сообщение в Telegram что запустился ✅
+Бот пришлёт сообщение в Telegram что запустился.
+
+### 9. Установить веб-панель
+
+```bash
+cd panel
+chmod +x install_panel.sh
+bash install_panel.sh
+```
+
+Скрипт автоматически:
+- Определит IPv4 адрес сервера
+- Сгенерирует логин и пароль
+- Установит Flask и запустит панель
+
+В конце выдаст:
+```
+Адрес панели: http://104.252.175.225:8888
+Логин:  admin
+Пароль: xK7mR2pQnL4wZ9vA
+```
 
 ---
 
-## 🎮 Команды бота
+## Команды бота
 
 | Команда | Описание |
 |---------|----------|
@@ -131,18 +150,34 @@ systemctl status mtproto-bot
 
 ---
 
-## 🎭 Лучшие Fake TLS домены
+## Веб-панель
 
-| Домен | Надёжность |
-|-------|-----------|
-| `ya.ru` | ⭐⭐⭐⭐⭐ |
-| `vk.com` | ⭐⭐⭐⭐⭐ |
-| `mail.ru` | ⭐⭐⭐⭐ |
-| `google.com` | ⭐⭐⭐⭐ |
+Открой в браузере: `http://ВАШ_IP:8888`
+
+Возможности панели:
+- Статус прокси и бота в реальном времени
+- Количество активных подключений
+- Управление: запуск, стоп, рестарт прокси и бота
+- Пересоздание прокси с новым секретом и доменом
+- Список пользователей бота
+- Логи контейнера
+- Светлая и тёмная тема
+- Смена пароля
 
 ---
 
-## 🛠 Полезные команды
+## Лучшие Fake TLS домены
+
+| Домен | Надёжность |
+|-------|-----------|
+| `ya.ru` | Отлично |
+| `vk.com` | Отлично |
+| `mail.ru` | Хорошо |
+| `google.com` | Хорошо |
+
+---
+
+## Полезные команды
 
 ```bash
 # Посмотреть ссылку прокси
@@ -154,23 +189,23 @@ docker logs -f mtproto-memes4u1337
 # Логи бота
 journalctl -u mtproto-bot -f
 
+# Логи панели
+journalctl -u mtproto-panel -f
+
 # Перезапустить прокси с новым секретом
 bash /opt/mtproto_setup.sh
 
 # Перезапустить бота
 systemctl restart mtproto-bot
+
+# Перезапустить панель
+systemctl restart mtproto-panel
 ```
-
----
-
-## 📋 Полный гайд
-
-Смотри файл [`GUIDE.txt`](./GUIDE.txt)
 
 ---
 
 <div align="center">
 
-**PROXY TELEGRAM by @memes4u1337** 🚀
+**PROXY TELEGRAM by @memes4u1337**
 
 </div>

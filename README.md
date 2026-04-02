@@ -80,6 +80,7 @@ bash mtproto_setup.sh ya.ru
 ### 6. Установить зависимости Python
 
 ```bash
+apt install -y python3-pip
 pip3 install -r requirements.txt --break-system-packages
 ```
 
